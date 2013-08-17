@@ -14,26 +14,26 @@
 #include <math.h>
 #include <sstream>
 #include <fstream>
+#include "TLorentzVector.h"
 
 //Base Dark Matter Analysis Class
 //Every other class (for each individual bkg channel and Data ) inherits from this one
 //Defines de metods and constants commom for all the channels
 //Baseline cuts, plots for MR and RSQ in different signal and control samples
 
-
 class BaseDM{
   
 public:
   
-  static const int MR_Bins = 6;
-  static const int RSQ_Bins = 6;
-
+  static const int MR_Bins = 4;
+  static const int RSQ_Bins = 4;
+  
   static const float Lumi = 5.;//fb^-1
     
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
   
-  static const int btagIndex = 3;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
+  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
   
   BaseDM();
   BaseDM( const char*, TString , int);//constructor for Data
@@ -65,6 +65,7 @@ public:
   virtual std::vector<TH1F*> PlotMETy();
   virtual std::vector<TH1F*> PlotMETmag();
   virtual std::vector<TH1F*> PlotMETphi(){};
+  virtual std::vector<TH1F*> DoubleMuBoxPlots();
   
   virtual std::vector<TH1F*> PlotHT();
   virtual std::vector<TH1F*> PlotMHTmag(){};

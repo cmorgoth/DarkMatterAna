@@ -1,12 +1,14 @@
 CXX = $(shell root-config --cxx)
 LD = $(shell root-config --ld)
 
+INC=$(shell pwd)
+
 OS_NAME:=$(shell uname -s | tr A-Z a-z)
 ifeq ($(OS_NAME),darwin)
 STDINCDIR := -I/opt/local/include
 STDLIBDIR := -L/opt/local/lib
 else
-STDINCDIR :=-I/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/UserCode/CPena/src/DarkMatter/include
+STDINCDIR :=-I$(INC)/include
 STDLIBDIR := 
 endif
 
@@ -17,7 +19,7 @@ CPPFLAGS += -g
 
 TARGET = DM_ANA_Err
 
-SRC = src/error_study.cc src/DM_StackPlots.cc src/DM_RatioPlots.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc src/DM_DY_HTBins.cc src/DM_TT_LSLH.cc src/DM_Data.cc src/DM_ZJetsNuNu.cc src/DM_WJetsHTBins.cc src/DM_2D_MR_RSQ_Dist.cc src/DM_T2CC.cc src/DM_METPlots.cc
+SRC = src/test.cc src/DM_StackPlots.cc src/DM_RatioPlots.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc src/DM_DY_HTBins.cc src/DM_TT_LSLH.cc src/DM_Data.cc src/DM_ZJetsNuNu.cc src/DM_WJetsHTBins.cc src/DM_2D_MR_RSQ_Dist.cc src/DM_T2CC.cc src/DM_METPlots.cc
 
 #TARGET = bkg_pre_1mu
 #SRC = bkg_pre_1mu.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc

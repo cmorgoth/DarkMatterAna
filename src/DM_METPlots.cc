@@ -8,7 +8,17 @@ void CreateMetPlots(){
   TCanvas* C0 = new TCanvas("C0", "C0", 1024, 1024);
   C0->cd();
 
+  int bL, bM, bT;
+  bL = bM = 0;
+  bT = 0;
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+  //////////////////////////////////////////// W + Jets //////////////////////////////////////////////////////////////   
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+
   WJetsHTBins* W = new WJetsHTBins( 2 );
+  W->SetBtagCut(bL,bM,bT);
   std::vector<TH1F*> MET_W = W->PlotMETmag();
   
   int ctr = 0;
@@ -27,6 +37,7 @@ void CreateMetPlots(){
   /////////////////////////////////////////////
   
   ZJetsNuNu* Z = new ZJetsNuNu( 2 );
+  Z->SetBtagCut(bL,bM,bT);
   std::vector<TH1F*> MET_Z = Z->PlotMETmag();
   
   ctr = 0;
@@ -45,7 +56,7 @@ void CreateMetPlots(){
   /////////////////////////////////////////////////////
   
   DY* dy = new DY( 2 );
-  
+  dy->SetBtagCut(bL,bM,bT);
   std::vector<TH1F*> MET_DY = dy->PlotMETmag();
   
   
@@ -67,11 +78,11 @@ void CreateMetPlots(){
   ////////////////////////////////////////////////
   ///////////////////////////////////////////////
   
-  const char* ttjets_file = "root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/PFJets80/TTJets80_Tot.root";
+  //const char* ttjets_file = "root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/PFJets80/TTJets80_Tot.root";
   //const char* ttjets_file = "root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/TTJets_NoTauVeto_Total.root";
   
   TTJets* TT = new TTJets( 2 );
-  
+  TT->SetBtagCut(bL,bM,bT);
   std::vector<TH1F*> MET_TT = TT->PlotMETmag();
   
   ctr = 0;
@@ -88,14 +99,11 @@ void CreateMetPlots(){
   //////////////////// DATA//////////////////////////////////////
   ///////////////////////////////////////////////////////////////
   
-  //const char* data_file = "root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/MuonIsoData/HTMHT_Data_TotPFJets.root";
-  
   const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/53X/HTMHT_Run2012A_ILV/out/HTMHT_ILV_Run2012AB.root";
     
-  //const char* data_file = "root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/HTMHT_AB_NoTauVeto.root";
-  
+    
   Data* data = new Data(data_file, 2);
-  
+  data->SetBtagCut(bL,bM,bT);
   std::vector<TH1F*> MET_Data = data->PlotMETmag();
   
   ctr = 0;

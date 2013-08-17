@@ -15,9 +15,8 @@ class ZJetsNuNu{
 public:
 
   
-  static const int MR_Bins = 6;
-  static const int RSQ_Bins = 6;
-  
+  static const int MR_Bins = 4;
+  static const int RSQ_Bins = 4;
   
   static const double sigma0 = 381.2*1000.;// (LO PREP)
   static const double sigma1 = 160.3*1000.;//(LO PREP)
@@ -28,7 +27,7 @@ public:
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
   
-  static const int btagIndex = 3;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1 
+  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1 
   
   ZJetsNuNu();
   ZJetsNuNu(int );

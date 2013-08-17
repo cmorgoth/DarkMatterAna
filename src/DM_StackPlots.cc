@@ -4,13 +4,15 @@
 void CreateStackPlots(){
  
   int bL, bM, bT;
-  bL = bM = 2;
-  bT = 1;
+  bL = bM = 0;
+  bT = 0;
   WJetsHTBins* W = new WJetsHTBins( 2 );
   ///////////////////////////////////////////
   ///////////////WJETS 1D HISTOS/////////////
   ///////////////////////////////////////////
+  //W->SetBtagIndex(0);
   W->SetBtagCut(bL,bM,bT);
+  W->PrintEvents();
   
   std::vector<TH1F*> Wjets = W->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (Wjets[i])->Integral() << std::endl;
@@ -42,7 +44,8 @@ void CreateStackPlots(){
   
   ZJetsNuNu* Z = new ZJetsNuNu( 2 );
   Z->SetBtagCut(bL,bM,bT);
-  
+  Z->PrintEvents();
+
   std::vector<TH1F*> Zjets = Z->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (Zjets[i])->Integral() << std::endl;
   
@@ -69,8 +72,8 @@ void CreateStackPlots(){
 
   DY* dy = new DY( 2 );
   dy->SetBtagCut(bL,bM,bT);
-//dy->PrintEvents();
-
+  dy->PrintEvents();
+  
   std::vector<TH1F*> dy_jets = dy->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (dy_jets[i])->Integral() << std::endl;
   
@@ -108,7 +111,8 @@ void CreateStackPlots(){
   
   TTJets* TT = new TTJets(2);
   TT->SetBtagCut(bL,bM,bT);
-    
+  TT->PrintEvents();
+
   std::vector<TH1F*> TTjets = TT->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (TTjets[i])->Integral() << std::endl;  
   
@@ -145,11 +149,15 @@ void CreateStackPlots(){
   //////////////////// DATA//////////////////////////////////////
   ///////////////////////////////////////////////////////////////
   
+  //const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/53X/HTMHT_Run2012A_ILV/out/HTMHT_ILV_Run2012AB.root";
+  
   const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/53X/HTMHT_Run2012A_ILV/out/HTMHT_ILV_Run2012AB.root";
+  
+  //const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/afs/DoubleMu-Run2012AB/out/DoubleMu_ILV_AB.root";
   
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);
-  //data->PrintEvents();
+  data->PrintEvents();
   
   TH1F* MR_22_data = new TH1F( data->PlotMR_2Box() );
   std::cout << "Data MR 2BOX: " << MR_22_data->Integral() << std::endl;
@@ -607,8 +615,8 @@ void CreateStackPlots(){
   RSQ_22_data->Draw("same");
   leg->Draw();
   C1->SetLogy();
-  C1->SaveAs("StackPlots/RSQ_2BOX_Stack.pdf");
-  C1->SaveAs("StackPlots/RSQ_2BOX_Stack.png");
+  C1->SaveAs("StackPlots/RSQ_2BOX_Stack_NoClean.pdf");
+  C1->SaveAs("StackPlots/RSQ_2BOX_Stack_NoClean.png");
   
 
   aux2 = new TH1F( *RSQ_dy_22 );

@@ -14,8 +14,8 @@ class WJetsHTBins{
   
 public:
   
-  static const int MR_Bins = 6;
-  static const int RSQ_Bins = 6;
+  static const int MR_Bins = 4;
+  static const int RSQ_Bins = 4;
   
   static const double sigma0 = 235.6*1000.;//fb (NNLO)
   static const double sigma1 = 90.27*1000.;//fb (NNLO)
@@ -24,8 +24,8 @@ public:
   static const double sigma4 = 25.22*1000.;//fb (LO PREP)
   static const float Lumi = 5.;//fb^{-1}
     
-  static const int btagIndex = 3;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
-
+  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
+  
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
   
@@ -65,7 +65,7 @@ public:
   bool SetMetStatus4();
 
   bool SetBtagCut(int a, int b, int c){nBtagCut[0]=a; nBtagCut[1]=b; nBtagCut[2]=c;};
-
+  //bool SetBtagIndex(int a){btagIndex=a};
   double HLTscale(double, double);
   double HLTscaleEle(double, double);
 

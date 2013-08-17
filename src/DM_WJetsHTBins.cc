@@ -126,8 +126,10 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   }
   
   std::cout << "----------------Branch Name:  " << BtagBranch << std::endl;
-  
+  std::cout << "------------------BranchIndex: " << this->btagIndex << std::endl;
+
 };
+
 
 WJetsHTBins::WJetsHTBins(const char* FileName ){
   

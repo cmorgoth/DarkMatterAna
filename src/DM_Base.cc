@@ -222,7 +222,7 @@ bool BaseDM::CalcWeight(){
 TH1F BaseDM::PlotMR_1Box(){
   
   TString BoxCut = "BOX == 1 && ";
-  double RSQ[4], MR[4], CSV[30];
+  double RSQ[4], MR[4], CSV[30], metX[4], metY[4];
   double hltWeight = 0.0;
   int BOX, N_Jets, nBtag[2];
   
@@ -236,6 +236,8 @@ TH1F BaseDM::PlotMR_1Box(){
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metY", metY);
   
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
@@ -261,7 +263,7 @@ TH1F BaseDM::PlotMR_1Box(){
 
 TH1F BaseDM::PlotMR_0Box(){
   
-  double RSQ[4], MR[4], CSV[30];
+  double RSQ[4], MR[4], CSV[30], metX[4], metY[4];
   double hltWeight = 0.0;
   int BOX, N_Jets, nBtag[2];
   
@@ -274,7 +276,8 @@ TH1F BaseDM::PlotMR_0Box(){
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
-  
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metY", metY);
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
     fBtag[0] = (nBtag[0] == 0);
@@ -299,7 +302,7 @@ TH1F BaseDM::PlotMR_0Box(){
 
 TH1F  BaseDM::PlotRSQ_1Box(){
   
-  double RSQ[4], MR[4], CSV[30];
+  double RSQ[4], MR[4], CSV[30], metX[4], metY[4];
   double hltWeight = 0.0;
   int BOX, N_Jets, nBtag[2];
   
@@ -313,6 +316,8 @@ TH1F  BaseDM::PlotRSQ_1Box(){
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metY", metY);
   
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
@@ -341,7 +346,7 @@ TH1F  BaseDM::PlotRSQ_1Box(){
 
 TH1F  BaseDM::PlotRSQ_0Box(){
   
-  double RSQ[4], MR[4], CSV[30];
+  double RSQ[4], MR[4], CSV[30], metX[4], metY[4];
   double hltWeight = 0.0;
   int BOX, N_Jets, nBtag[2];
   
@@ -355,7 +360,9 @@ TH1F  BaseDM::PlotRSQ_0Box(){
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
-  
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metY", metY);
+
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
     fBtag[0] = (nBtag[0] == 0);
@@ -524,11 +531,15 @@ TH2F BaseDM::PlotRSQ_vs_MR_2Box(){
 
 TH1F  BaseDM::PlotRSQ_2Box(){
   
-  double RSQ[4], MR[4], CSV[30];
-  double hltWeight = 0.0;
+  double RSQ[4], MR[4], CSV[30], run, evNum, ls, metX[4], metY[4];
+  double hltWeight = 0.0, Mu_E[2], Mu_Px[2], Mu_Py[2], Mu_Pz[2];
   int BOX, N_Jets, nBtag[2];
   TH1F* RSQ2 = new TH1F("RSQ2_DY", "RSQ2BOX_DY", RSQ_Bins, RSQ_BinArr);
+  
   SetBrachStatus();
+  T->SetBranchAddress("run", &run);
+  T->SetBranchAddress("evNum", &evNum);
+  T->SetBranchAddress("ls", &ls);
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
@@ -536,16 +547,34 @@ TH1F  BaseDM::PlotRSQ_2Box(){
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metY", metY);
+  T->SetBranchStatus("Mu_E",1);
+  T->SetBranchStatus("Mu_Px",1);
+  T->SetBranchStatus("Mu_Py",1);
+  T->SetBranchStatus("Mu_Pz",1);
+  T->SetBranchAddress("Mu_E", Mu_E);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
   
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
+    //if((run == 191859 && ls == 96) || (run == 193621 && ls == 628) || (run == 194424 && ls == 537) || (run == 194151 && ls == 551) || (run == 195398 && ls == 58) || (run == 194897 && ls == 50))continue;
     fBtag[0] = (nBtag[0] == 0);
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
     fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    double MET = sqrt(metX[2]*metX[2]+metY[2]*metY[2]);
     
-    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin && fBtag[btagIndex] ){
+    TLorentzVector mu1(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
+    TLorentzVector mu2(Mu_Px[1], Mu_Py[1], Mu_Pz[1], Mu_E[1]);
+    TLorentzVector sum_mu;
+    sum_mu = mu1 + mu2;
+    double Mass = sum_mu.M();
+    
+    if( /*Mass > 50.  && Mass < 180. N_Jets == 2 &&*/ BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin && fBtag[btagIndex] ){
       if(this->processName == "Data"){
         RSQ2->Fill(RSQ[metIndex], weight);
       }else{
@@ -563,8 +592,8 @@ TH1F  BaseDM::PlotRSQ_2Box(){
 
 TH1F BaseDM::PlotMR_2Box(){
   
-  double RSQ[4], MR[4], CSV[30];
-  double hltWeight = 0.0;
+  double RSQ[4], MR[4], CSV[30], metX[4], metY[4];
+  double hltWeight = 0.0, Mu_E[4], Mu_Px[4], Mu_Py[4], Mu_Pz[4];
   int BOX, N_Jets, nBtag[2];
   TH1F* MR2 = new TH1F("MR2_DY", "MR2BOX_DY", MR_Bins, MR_BinArr);
   SetBrachStatus();
@@ -575,7 +604,17 @@ TH1F BaseDM::PlotMR_2Box(){
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
-  
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metY", metY);
+  T->SetBranchStatus("Mu_E",1);
+  T->SetBranchStatus("Mu_Px",1);
+  T->SetBranchStatus("Mu_Py",1);
+  T->SetBranchStatus("Mu_Pz",1);
+  T->SetBranchAddress("Mu_E", Mu_E);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
     fBtag[0] = (nBtag[0] == 0);
@@ -583,8 +622,14 @@ TH1F BaseDM::PlotMR_2Box(){
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
     fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    double MET = sqrt(metX[2]*metX[2]+metY[2]*metY[2]);
+    TLorentzVector mu1(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
+    TLorentzVector mu2(Mu_Px[1], Mu_Py[1], Mu_Pz[1], Mu_E[1]);
+    TLorentzVector sum_mu;
+    sum_mu = mu1 + mu2;
+    double Mass = sum_mu.M();
 
-    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin && fBtag[btagIndex] ){
+    if( /*Mass > 50. && Mass < 180. && N_Jets == 2 &&*/ BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin && fBtag[btagIndex] ){
       if(this->processName == "Data"){
         MR2->Fill(MR[metIndex], weight);
       }else{
@@ -596,6 +641,86 @@ TH1F BaseDM::PlotMR_2Box(){
   }
   
   return *MR2;
+};
+
+std::vector<TH1F*> BaseDM::DoubleMuBoxPlots(){
+  
+  double metX[4], metcorrX[4], metY[4], metcorrY[4], ht, RSQ[4], MR[4]/*, run, ls, evNum*/;
+  double mht[3], CSV[30], Mu_E[2], Mu_Px[2], Mu_Py[2], Mu_Pz[2];
+  int BOX, N_Jets, nBtag[2];
+  
+  std::vector<TH1F*> vec_plot;
+  TH1F* plot_2mu[6];
+  
+  plot_2mu[0] = new TH1F( "Mass", "Mass", 15, .0, 500.);
+  plot_2mu[1] = new TH1F( "Angle", "Angle", 15, .0, 2*3.1416);
+  plot_2mu[2] = new TH1F( "Pt1", "Pt1", 15, .0, 500);
+  plot_2mu[3] = new TH1F( "Pt2", "Pt2", 15, .0, 500);
+  plot_2mu[4] = new TH1F( "Eta1", "Eta1", 15, -3.0, 3.0);
+  plot_2mu[5] = new TH1F( "Eta2", "Eta2", 15, -3.0, 3.0);
+  
+  SetBrachStatus();
+  T->SetBranchStatus("Mu_E",1);
+  T->SetBranchStatus("Mu_Px",1);
+  T->SetBranchStatus("Mu_Py",1);
+  T->SetBranchStatus("Mu_Pz",1);
+  T->SetBranchAddress("Mu_E", Mu_E);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+  T->SetBranchAddress("RSQ", RSQ);
+  T->SetBranchAddress("MR", MR);
+  T->SetBranchAddress("BOX_NUM", &BOX);
+  T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  T->SetBranchAddress("N_Jets", &N_Jets);
+  T->SetBranchAddress("CSV", CSV);
+  T->SetBranchAddress("ht", &ht);
+  T->SetBranchAddress("mht", &mht[0]);
+  T->SetBranchAddress("metX", metX);
+  T->SetBranchAddress("metCorrX", metcorrX);
+  T->SetBranchAddress("metY", metY);
+  
+  for(int i = 0; i < T->GetEntries(); i++){
+    T->GetEntry(i);
+    fBtag[0] = (nBtag[0] == 0);
+    fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
+    fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
+    int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
+    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    
+    double MET = sqrt(metX[2]*metX[2]+metY[2]*metY[2]);
+    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] ){
+      TLorentzVector mu1(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
+      TLorentzVector mu2(Mu_Px[1], Mu_Py[1], Mu_Pz[1], Mu_E[1]);
+      TLorentzVector sum_mu;
+      sum_mu = mu1 + mu2;
+      double Mass = sum_mu.M();
+      double angle = mu1.Angle(mu2.Vect());
+      double pt1 = mu1.Pt();
+      double pt2 = mu2.Pt();
+      double eta1 = asinh(Mu_Pz[0]/pt1);
+      double eta2 = asinh(Mu_Pz[1]/pt2);
+      
+      if(Mass > 0. && Mass < 1800.){
+	plot_2mu[0]->Fill(Mass);
+	plot_2mu[1]->Fill(angle);
+	plot_2mu[2]->Fill(pt1);
+	plot_2mu[3]->Fill(pt2);
+	plot_2mu[4]->Fill(eta1);
+	plot_2mu[5]->Fill(eta2);
+      }
+      
+    }
+    
+  }
+  
+  for(int j = 0; j < 6; j++){
+    vec_plot.push_back(plot_2mu[j]);
+  }
+  
+  return vec_plot;
+  
 };
 
 std::vector<TH1F*> BaseDM::PlotMETx(){
@@ -968,6 +1093,9 @@ int BaseDM::pfJetPassCSVM(double* CSVM, int N_Jets){
 
 bool BaseDM::SetBrachStatus(){
   T->SetBranchStatus("*",0); //disable all branches
+  T->SetBranchStatus("run",1);
+  T->SetBranchStatus("evNum",1);
+  T->SetBranchStatus("ls",1);
   T->SetBranchStatus("RSQ",1);
   T->SetBranchStatus("MR",1);
   T->SetBranchStatus("BOX_NUM",1);

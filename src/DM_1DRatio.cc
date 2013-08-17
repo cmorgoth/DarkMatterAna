@@ -175,6 +175,21 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
     RATIO = new TH1F("RATIO", fname + "_" + type , 9, 1, 10);
     label = "Jet Multiplicity";
     s->SetMaximum(100000.);
+  }else if(type=="Mass"){
+    RATIO = new TH1F("RATIO", fname + "_" + type , 15, .0, 500);
+    label = "Inv Mass";
+  }else if(type=="Angle"){
+    std::cout << "========ANgle=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 15, .0, 2*3.1416);
+    label = "#Delta#theta";
+  }else if(type=="PT"){
+    RATIO = new TH1F("RATIO", fname + "_" + type , 15, .0, 500);
+    label = "P_{T}";
+  }else if(type=="eta"){
+    std::cout << "========eta=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 15, -3.0, 3.0);
+    label = "#eta";
+    std::cout << "========eta1=======" << std::endl;
   }else{
     delete RATIO;
     delete C;
@@ -188,6 +203,7 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
   h2->SetMarkerSize(.7);
   h2->SetStats(0);
   
+  std::cout << "========deb-1=======" << std::endl;
   s->SetMinimum(1.);
   
   TPad *pad1 = new TPad("pad1","pad1",0,0.25,1,1);
@@ -212,14 +228,48 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
   le->Draw();
   pad1->SetLogy();
   C->Update();
-  
-  TLatex *t = new TLatex();
-  t->SetNDC();
-  t->SetTextAlign(22);
-  t->SetTextSize(0.03);
-  t->DrawLatex(0.25,0.87,"CMS Preliminary");
-  t->DrawLatex(0.25,0.83,"#sqrt{s} = 8 TeV");
-  t->DrawLatex(0.25,0.77,"#int L dt = 5 fb^{-1}");
+  TLatex *t;
+  if(type=="Mass"){
+    t = new TLatex();
+    t->SetNDC();
+    t->SetTextAlign(22);
+    t->SetTextSize(0.03);
+    t->DrawLatex(0.45,0.87,"CMS Preliminary");
+    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.45,0.77,"#int L dt = 5 fb^{-1}");
+  }else if(type == "Angle"){
+    TLatex *t = new TLatex();
+    t->SetNDC();
+    t->SetTextAlign(22);
+    t->SetTextSize(0.03);
+    t->DrawLatex(0.45,0.87,"CMS Preliminary");
+    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.45,0.77,"#int L dt = 5 fb^{-1}");
+  }else if(type=="PT"){
+    TLatex *t = new TLatex();
+    t->SetNDC();
+    t->SetTextAlign(22);
+    t->SetTextSize(0.03);
+    t->DrawLatex(0.25,0.87,"CMS Preliminary");
+    t->DrawLatex(0.25,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.25,0.77,"#int L dt = 5 fb^{-1}");
+  }else if(type=="eta"){
+    TLatex *t = new TLatex();
+    t->SetNDC();
+    t->SetTextAlign(22);
+    t->SetTextSize(0.03);
+    t->DrawLatex(0.45,0.87,"CMS Preliminary");
+    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.45,0.77,"#int L dt = 5 fb^{-1}");
+  }else{
+    TLatex *t = new TLatex();
+    t->SetNDC();
+    t->SetTextAlign(22);
+    t->SetTextSize(0.03);
+    t->DrawLatex(0.25,0.87,"CMS Preliminary");
+    t->DrawLatex(0.25,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.25,0.77,"#int L dt = 5 fb^{-1}");    
+  }
   
   TPad *pad2 = new TPad("pad2","pad2",0,0.0,1,0.25);
   pad2->SetTopMargin(0.008);

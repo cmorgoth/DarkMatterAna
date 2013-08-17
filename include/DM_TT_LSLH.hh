@@ -8,15 +8,15 @@
 #include "TEfficiency.h"
 #include <vector>
 #include <math.h>
-
+#include "TLorentzVector.h"
 
 class TTJets{
   
 public:
   
   
-  static const int MR_Bins = 6;
-  static const int RSQ_Bins = 6;
+  static const int MR_Bins = 4;
+  static const int RSQ_Bins = 4;
   
   static const double sigma0 = 136.3*1000.0*0.105;// (LO PREP)
   static const double sigma1 = 136.3*1000.0*0.438;//(LO PREP)
@@ -26,7 +26,7 @@ public:
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
 
-  static const int btagIndex = 3;
+  static const int btagIndex = 0;
   
   TTJets();
   TTJets(int );
@@ -52,6 +52,7 @@ public:
   std::vector<TH2F*> Plot_2DRazor();
   std::vector<TH1F*> Plot_1DRazor();
   std::vector<TH1F*> PlotMETmag();
+  std::vector<TH1F*> DoubleMuBoxPlots();
   
   bool PrintEvents();
   bool SetStatus();
