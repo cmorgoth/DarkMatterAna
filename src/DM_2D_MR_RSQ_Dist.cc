@@ -198,7 +198,7 @@ void Create2DPlots(){
   //////////////////// DATA//////////////////////////////////////
   ///////////////////////////////////////////////////////////////
   
-  const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/53X/HTMHT_Run2012A_ILV/out/HTMHT_ILV_Run2012AB.root";
+  const char* data_file = "/media/data/cmorgoth/Data/DMData/HTMHT_ILV_Run2012AB.root";
 
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);

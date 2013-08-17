@@ -13,15 +13,15 @@ ZJetsNuNu::ZJetsNuNu(int metIndex){
   
   double Nexp = 0;
   
-  TFile* file = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/MuHad-Run2012AB/out/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
+  TFile* file = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
   
   eff = (TEfficiency*)file->Get("Eff2d");
-  TFile* file1 = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/EleHad-Run2012AB/out/hlt_eff_mr200_MoreBin_PT80.root");
+  TFile* file1 = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_PT80.root");
   
   eff_ele = (TEfficiency*)file->Get("Eff2d");
   
   
-  F = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/ZJetsToNuNu_ILV_50_HT_100.root");
+  F = TFile::Open("/media/data/cmorgoth/Data/DMData/ZJetsToNuNu_ILV_50_HT_100.root");
   
   TTree* effT = (TTree*)F->Get("effTree");
   T = (TTree*)F->Get("outTree");
@@ -35,7 +35,7 @@ ZJetsNuNu::ZJetsNuNu(int metIndex){
   weight0 = Lumi*sigma0/Ntot;
   Nexp += weight0*T->GetEntries(); 
   
-  F1 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/ZJetsToNuNu_ILV_100_HT_200.root");
+  F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/ZJetsToNuNu_ILV_100_HT_200.root");
   
   effT = (TTree*)F1->Get("effTree");
   effT->SetBranchAddress("Npassed_In", &N_In);
@@ -49,7 +49,7 @@ ZJetsNuNu::ZJetsNuNu(int metIndex){
   weight1 = Lumi*sigma1/Ntot;
   Nexp += weight1*T1->GetEntries(); 
   
-  F2 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/ZJetsToNuNu_ILV_200_HT_400.root");
+  F2 = TFile::Open("/media/data/cmorgoth/Data/DMData/ZJetsToNuNu_ILV_200_HT_400.root");
   
   effT = (TTree*)F2->Get("effTree");
   effT->SetBranchAddress("Npassed_In", &N_In);
@@ -62,7 +62,7 @@ ZJetsNuNu::ZJetsNuNu(int metIndex){
   weight2 = Lumi*sigma2/Ntot;
   Nexp += weight2*T2->GetEntries(); 
   
-  F3 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/ZJetsToNuNu_ILV_400_HT_inf.root");
+  F3 = TFile::Open("/media/data/cmorgoth/Data/DMData/ZJetsToNuNu_ILV_400_HT_inf.root");
   
   effT = (TTree*)F3->Get("effTree");
   effT->SetBranchAddress("Npassed_In", &N_In);

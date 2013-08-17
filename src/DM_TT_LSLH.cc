@@ -17,10 +17,10 @@ TTJets::TTJets(int metIndex){
   /////////// files and TEfficiency///////
   ///////////////////////////////////////
   
-  TFile* file = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/MuHad-Run2012AB/out/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
+  TFile* file = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
   eff = (TEfficiency*)file->Get("Eff2d");
   
-  TFile* file1 = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/EleHad-Run2012AB/out/hlt_eff_mr200_MoreBin_PT80.root");
+  TFile* file1 = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_PT80.root");
   eff_ele = (TEfficiency*)file->Get("Eff2d");
   
   ///////////////////////////////////
@@ -28,7 +28,7 @@ TTJets::TTJets(int metIndex){
   //////////////////////////////////
   
   //Leptonic
-  F = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/TTJets_ILV_FullyLeptMGDecaysTauola.root");
+  F = TFile::Open("/media/data/cmorgoth/Data/DMData/TTJets_ILV_FullyLeptMGDecaysTauola.root");
   
   TTree* effT = (TTree*)F->Get("effTree");
   T = (TTree*)F->Get("outTree");
@@ -43,7 +43,7 @@ TTJets::TTJets(int metIndex){
   Nexp += weight0*T->GetEntries(); 
   
   //SemiLeptonic
-  F1 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/TTJetsSemiLept_ILV_MGDecaysTauola.root");
+  F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/TTJetsSemiLept_ILV_MGDecaysTauola.root");
   
   effT = (TTree*)F1->Get("effTree");
   effT->SetBranchAddress("Npassed_In", &N_In);
@@ -58,7 +58,7 @@ TTJets::TTJets(int metIndex){
   Nexp += weight1*T1->GetEntries(); 
   
   //Hadronic
-  F2 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/TTJetsHad_ILV_MGDecays.root");
+  F2 = TFile::Open("/media/data/cmorgoth/Data/DMData/TTJetsHad_ILV_MGDecays.root");
   //F2 = TFile::Open("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/afs/TTj_Had/out/TTj_Had_ILV.root");
 
   effT = (TTree*)F2->Get("effTree");

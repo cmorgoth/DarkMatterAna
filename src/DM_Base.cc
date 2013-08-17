@@ -18,10 +18,10 @@ BaseDM::BaseDM( const char* FileName, TString pName, float sig, int MetIndex ){
   this->processName = pName;
   this->metIndex = MetIndex;
   
-  TFile* file = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/MuHad-Run2012AB/out/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
+  TFile* file = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
 
   eff = (TEfficiency*)file->Get("Eff2d");
-  TFile* file1 = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/EleHad-Run2012AB/out/hlt_eff_mr200_MoreBin_PT80.root");
+  TFile* file1 = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_PT80.root");
 
   eff_ele = (TEfficiency*)file->Get("Eff2d");
   
@@ -48,10 +48,10 @@ BaseDM::BaseDM( const char* FileName, TString pName , int MetIndex ){
   this->sigma = -99.;
   this->metIndex = MetIndex;
   
-  TFile* file = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/MuHad-Run2012AB/out/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
+  TFile* file = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
   eff = (TEfficiency*)file->Get("Eff2d");
 
-  TFile* file1 = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/EleHad-Run2012AB/out/hlt_eff_mr200_MoreBin_PT80.root");
+  TFile* file1 = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_PT80.root");
   eff_ele = (TEfficiency*)file->Get("Eff2d");
    
   if( btagIndex == 0 || btagIndex == 1 ){

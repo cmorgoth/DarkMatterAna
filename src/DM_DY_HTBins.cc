@@ -15,10 +15,10 @@ DY::DY(int metIndex){
   /////////////////////////////////////////
   ///////////Trigger Efficiency////////////
   ////////////////////////////////////////
-  TFile* file = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/MuHad-Run2012AB/out/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
+  TFile* file = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
   
   eff = (TEfficiency*)file->Get("Eff2d");
-  TFile* file1 = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/EleHad-Run2012AB/out/hlt_eff_mr200_MoreBin_PT80.root");
+  TFile* file1 = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_PT80.root");
   
   eff_ele = (TEfficiency*)file->Get("Eff2d");
   
@@ -26,7 +26,7 @@ DY::DY(int metIndex){
   ////////////////HT bins Trees/////////
   //////////////////////////////////////  
   
-  F = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/DYJetsHT200To400_ILV.root");
+  F = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJetsHT200To400_ILV.root");
   //F = TFile::Open("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/53X/DYJetsHT200To400/out/DYJetsHT200To400_ILV.root");
 
   TTree* effT = (TTree*)F->Get("effTree");
@@ -41,7 +41,7 @@ DY::DY(int metIndex){
   weight0 = Lumi*sigma0/Ntot;
   Nexp += weight0*T->GetEntries(); 
   
-  F1 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/DYJetsHT400_ILV.root");
+  F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/Cristian_DM/ILV/DYJetsHT400_ILV.root");
   //F1 = TFile::Open("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/53X/DYJetsHT400/out/DYJetsHT400_ILV.root");
   
   effT = (TTree*)F1->Get("effTree");

@@ -9,10 +9,10 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   RSQMin = 0.5;//nominal 0.5
   this->metIndex = metIndex;
   
-  TFile* file = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/MuHad-Run2012AB/out/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
+  TFile* file = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_ABCD_PT80v2Muon.root");
   //hlt = (TH2F*)file->Get("h");
   eff = (TEfficiency*)file->Get("Eff2d");
-  TFile* file1 = new TFile("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/V07_5_3_X/EleHad-Run2012AB/out/hlt_eff_mr200_MoreBin_PT80.root");
+  TFile* file1 = new TFile("/media/data/cmorgoth/Data/DMData/hlt_eff_mr200_MoreBin_PT80.root");
   //hlt_ele = (TH2F*)file1->Get("h");
   eff_ele = (TEfficiency*)file->Get("Eff2d");
   //std::cout << hlt->GetNbinsX() << std::endl;
@@ -21,7 +21,7 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   double N_In = 0 , Ntot = 0;
   double Nexp = 0;
   
-  F = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/WJetsToLNu_ILV_150_HT_200.root");
+  F = TFile::Open("/media/data/cmorgoth/Data/DMData/WJetsToLNu_ILV_150_HT_200.root");
 
   //F = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/WJetsToLNu_150_HT_200_NoTauVeto.root");
   
@@ -38,7 +38,7 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   weight0 = Lumi*sigma0/Ntot;
   Nexp += weight0*T->GetEntries(); 
   
-  F1 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/WJetsToLNu_ILV_200_HT_250.root");
+  F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/WJetsToLNu_ILV_200_HT_250.root");
   
   //F1 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/WJetsToLNu_200_HT_250_NoTauVeto.root");
   
@@ -54,7 +54,7 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   weight1 = Lumi*sigma1/Ntot;
   Nexp += weight1*T1->GetEntries(); 
   
-  F2 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/WJetsToLNu_ILV_250_HT_300.root");
+  F2 = TFile::Open("/media/data/cmorgoth/Data/DMData/WJetsToLNu_ILV_250_HT_300.root");
   
   //F2 =  TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/WJetsToLNu_250_HT_300_NoTauVeto.root");
   
@@ -70,7 +70,7 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   weight2 = Lumi*sigma2/Ntot;
   Nexp += weight2*T2->GetEntries(); 
 
-  F3 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/WJetsToLNu_ILV_300_HT_400.root");
+  F3 = TFile::Open("/media/data/cmorgoth/Data/DMData/WJetsToLNu_ILV_300_HT_400.root");
     
   //F3 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/WJetsToLNu_300_HT_400_Total_NoTauVeto.root");
 
@@ -90,7 +90,7 @@ WJetsHTBins::WJetsHTBins(int metIndex){
   //delete effT;
   //std::cout << "Expected Number of events WJetsHTBins: " << Nexp << std::endl;
 
-  F4 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/ILV/WJetsToLNu_ILV_400_HT_Inf.root");
+  F4 = TFile::Open("/media/data/cmorgoth/Data/DMData/WJetsToLNu_ILV_400_HT_Inf.root");
   
   //F4 = TFile::Open("root://eoscms//eos/cms/store/group/phys_susy/razor/Cristian_DM/NoTauVeto/WJetsToLNu_400_HT_Inf_NoTauVeto.root");
   
