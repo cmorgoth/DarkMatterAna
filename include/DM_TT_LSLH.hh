@@ -18,14 +18,19 @@ public:
   static const int MR_Bins = 4;
   static const int RSQ_Bins = 4;
   
-  static const double sigma0 = 136.3*1000.0*0.105;// (LO PREP)
-  static const double sigma1 = 136.3*1000.0*0.438;//(LO PREP)
-  static const double sigma2 = 136.3*1000.0*0.457;//fb (LO PREP)
-  static const float Lumi = 5.;//fb^{-1}
+  //static const double sigma0 = 136.3*1000.0*0.105;// (LO PREP)
+  //static const double sigma1 = 136.3*1000.0*0.438;//(LO PREP)
+  //static const double sigma2 = 136.3*1000.0*0.457;//fb (LO PREP)
+  
+  static const double sigma0 = 245.8*1000.0*0.105;// (NNLO)                                                          
+  static const double sigma1 = 245.8*1000.0*0.438;//(NNLO)                                                           
+  static const double sigma2 = 245.8*1000.0*0.457;//fb (NNLO) 
+  
+  static const float Lumi = 19.6;//fb^{-1}
   
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
-
+  
   static const int btagIndex = 0;
   
   TTJets();

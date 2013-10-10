@@ -144,7 +144,7 @@ int RatioPlots(TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TString h2Name = "
 };
 
 
-int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TString h2Name = "h2Name", TString fname = "default_name", TString type = "defaultType", TLegend* le = NULL){
+int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TString h2Name = "h2Name", TString fname = "default_name", TString type = "defaultType", TLegend* le = NULL){
 
   TCanvas* C = new TCanvas("C", "C      ", 400, 500);
   C->cd();
@@ -198,10 +198,20 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
   }
   
   std::cout << "=====================Dividing Histograms=====================" << std::endl;
-  RATIO->Divide(h2, h1, 1, 1, "");
+  std::cout << h1->GetBinContent(1) << " " << h1->GetBinContent(2) << " " << h1->GetBinContent(3) << " " << h1->GetBinContent(4) << std::endl;
+  std::cout << h2->GetBinContent(1) << " " << h2->GetBinContent(2) << " " << h2->GetBinContent(3) << " " << h2->GetBinContent(4) << std::endl;
+  double r1 =  h2->GetBinContent(1)/h1->GetBinContent(1);
+  double r2 =  h2->GetBinContent(2)/h1->GetBinContent(2);
+  double r3 =  h2->GetBinContent(3)/h1->GetBinContent(3);
+  double r4 =  h2->GetBinContent(4)/h1->GetBinContent(4);
+  
+  std::cout << r1 << " " << r2 << " " << r3 << " " << r4 << std::endl;
+  RATIO->Divide(h2, h1, 1.0, 1.0, "");
   RATIO->GetYaxis()->SetRangeUser(.0, 3.05);
   h2->SetMarkerSize(.7);
   h2->SetStats(0);
+
+  std::cout << RATIO->GetBinContent(1) << " " << RATIO->GetBinContent(2) << " " << RATIO->GetBinContent(3) << " " << RATIO->GetBinContent(4) << std::endl;
   
   std::cout << "========deb-1=======" << std::endl;
   s->SetMinimum(1.);
@@ -236,7 +246,7 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
     t->SetTextSize(0.03);
     t->DrawLatex(0.45,0.87,"CMS Preliminary");
     t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 5 fb^{-1}");
+    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
   }else if(type == "Angle"){
     TLatex *t = new TLatex();
     t->SetNDC();
@@ -244,15 +254,15 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
     t->SetTextSize(0.03);
     t->DrawLatex(0.45,0.87,"CMS Preliminary");
     t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 5 fb^{-1}");
+    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
   }else if(type=="PT"){
     TLatex *t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.25,0.87,"CMS Preliminary");
-    t->DrawLatex(0.25,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.25,0.77,"#int L dt = 5 fb^{-1}");
+    t->DrawLatex(0.45,0.87,"CMS Preliminary");
+    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
   }else if(type=="eta"){
     TLatex *t = new TLatex();
     t->SetNDC();
@@ -260,15 +270,15 @@ int RatioPlotsV2(THStack* s, TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TStr
     t->SetTextSize(0.03);
     t->DrawLatex(0.45,0.87,"CMS Preliminary");
     t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 5 fb^{-1}");
+    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
   }else{
     TLatex *t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.25,0.87,"CMS Preliminary");
-    t->DrawLatex(0.25,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.25,0.77,"#int L dt = 5 fb^{-1}");    
+    t->DrawLatex(0.5,0.87,"CMS Preliminary");
+    t->DrawLatex(0.5,0.83,"#sqrt{s} = 8 TeV");
+    t->DrawLatex(0.5,0.77,"#int L dt = 19.6 fb^{-1}");    
   }
   
   TPad *pad2 = new TPad("pad2","pad2",0,0.0,1,0.25);

@@ -1,18 +1,18 @@
 CXX = $(shell root-config --cxx)
 LD = $(shell root-config --ld)
 
-INC=$(shell pwd)
+INC = $(shell pwd)
 
 OS_NAME:=$(shell uname -s | tr A-Z a-z)
 ifeq ($(OS_NAME),darwin)
 STDINCDIR := -I/opt/local/include
 STDLIBDIR := -L/opt/local/lib
 else
-STDINCDIR :=-I$(INC)/include
+STDINCDIR :=-I/media/data/cmorgoth/git/DarkMatterAna/
 STDLIBDIR := 
 endif
 
-CPPFLAGS := $(shell root-config --cflags) $(STDINCDIR)
+CPPFLAGS := -Wl,--no-as-needed $(shell root-config --cflags) -I$(INC)/include
 LDFLAGS := $(shell root-config --glibs) $(STDLIBDIR)
 
 CPPFLAGS += -g

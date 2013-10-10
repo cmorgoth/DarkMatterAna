@@ -4,38 +4,51 @@
 void CreateStackPlots(){
  
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 2;
+  bT = 2;
   WJetsHTBins* W = new WJetsHTBins( 2 );
   ///////////////////////////////////////////
   ///////////////WJETS 1D HISTOS/////////////
   ///////////////////////////////////////////
-  //W->SetBtagIndex(0);
   W->SetBtagCut(bL,bM,bT);
   W->PrintEvents();
+  
+  //TH1F* W_MR0 = new TH1F( W->PlotMR_0Box() );
+  //TH1F* W_R20 =new TH1F( W->PlotRSQ_0Box() );
+  //TH1F* W_MR1 =new TH1F( W->PlotMR_1Box() );
+  //TH1F* W_R21 =new TH1F( W->PlotRSQ_1Box() );
+  
+  //std::cout << "WJets MR 1BOX V2: " << W_MR1->Integral() << std::endl; 
+  //std::cout << "WJets R2 1BOX V2: " << W_R21->Integral() << std::endl; 
+  //std::cout << "WJets MR 0BOX V2: " << W_MR0->Integral() << std::endl; 
+  //std::cout << "WJets R2 0BOX V2: " << W_R20->Integral() << std::endl; 
   
   std::vector<TH1F*> Wjets = W->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (Wjets[i])->Integral() << std::endl;
 
   
-  TH1F* RSQ_0 = new TH1F( *Wjets[1] );                     
-  std::cout << "WJets R2 0BOX: " << RSQ_0->Integral() << std::endl;                                                     
-                                                                                                                 
-  TH1F* RSQ_1 = new TH1F( *Wjets[3] );                                                                           
-  std::cout << "WJets R2 1BOX: " << RSQ_1->Integral() << std::endl;                                                      
-                                                                                                                         
-  TH1F* MR_0 = new TH1F( *Wjets[0] );                                                                              
-  std::cout << "WJets MR 0BOX: " << MR_0->Integral() << std::endl;                                                        
-  TH1F* MR_1 = new TH1F( *Wjets[2] );                                                                              
-  std::cout << "WJets MR 1BOX: " << MR_1->Integral() << std::endl; 
+  TH1F* RSQ_0 = new TH1F( *Wjets[1] );
+  std::cout << "WJets R2 0BOX: " << RSQ_0->Integral() << std::endl;
 
+  TH1F* RSQ_1 = new TH1F( *Wjets[3] );
+  std::cout << "WJets R2 1BOX: " << RSQ_1->Integral() << std::endl;
   
-  TH1F* W_MR0 = new TH1F( W->PlotMR_0Box() );
-  std::cout << "debug -1" << std::endl;
-  TH1F* W_R20 =new TH1F( W->PlotRSQ_0Box() );
-  TH1F* W_MR1 =new TH1F( W->PlotMR_1Box() );
-  TH1F* W_R21 =new TH1F( W->PlotRSQ_1Box() );
+  TH1F* MR_0 = new TH1F( *Wjets[0] );
+  std::cout << "WJets MR 0BOX: " << MR_0->Integral() << std::endl;
+  
+  TH1F* MR_1 = new TH1F( *Wjets[2] );
+  std::cout << "WJets MR 1BOX: " << MR_1->Integral() << std::endl;
 
+  TH1F* W_MR0 = new TH1F( *Wjets[6] );
+  TH1F* W_R20 =new TH1F( *Wjets[7] );
+  TH1F* W_MR1 =new TH1F( *Wjets[8] );
+  TH1F* W_R21 =new TH1F( *Wjets[9] );
+
+  std::cout << "WJets MR 1BOX V2: " << W_MR1->Integral() << std::endl;
+  std::cout << "WJets R2 1BOX V2: " << W_R21->Integral() << std::endl;
+  std::cout << "WJets MR 0BOX V2: " << W_MR0->Integral() << std::endl;
+  std::cout << "WJets R2 0BOX V2: " << W_R20->Integral() << std::endl;
+  
   TLegend* leg;
   std::cout << "debug 0" << std::endl;
   /////////////////////////////////////////////
@@ -61,11 +74,14 @@ void CreateStackPlots(){
   TH1F* RSQ_00 = new TH1F( *Zjets[1] );
   std::cout << "ZJets RSQ 0BOX: " << RSQ_00->Integral() << std::endl;
   
-  TH1F* Z_MR0 =new TH1F( Z->PlotMR_0Box() );
-  TH1F* Z_R20 =new TH1F( Z->PlotRSQ_0Box() );
-  TH1F* Z_MR1 =new TH1F( Z->PlotMR_1Box() );
-  TH1F* Z_R21 =new TH1F( Z->PlotRSQ_1Box() );
-
+  TH1F* Z_MR0 =new TH1F( *Zjets[6] );
+  TH1F* Z_R20 =new TH1F( *Zjets[7] );
+  TH1F* Z_MR1 =new TH1F( *Zjets[8] );
+  TH1F* Z_R21 =new TH1F( *Zjets[9] );
+  std::cout << "ZJets MR 1BOX V2: " << Z_MR1->Integral() << std::endl; 
+  std::cout << "ZJets R2 1BOX V2: " << Z_R21->Integral() << std::endl; 
+  std::cout << "ZJets MR 0BOX V2: " << Z_MR0->Integral() << std::endl; 
+  std::cout << "ZJets R2 0BOX V2: " << Z_R20->Integral() << std::endl;
   //////////////////////////////////////////////////////
   ///////////////// Drell-Yan///////////////////////////
   /////////////////////////////////////////////////////
@@ -75,7 +91,7 @@ void CreateStackPlots(){
   dy->PrintEvents();
   
   std::vector<TH1F*> dy_jets = dy->Plot_1DRazor();
-  for(int i = 0; i < 6; i++)std::cout << i << " " << (dy_jets[i])->Integral() << std::endl;
+  for(int i = 0; i < 12; i++)std::cout << i << " " << (dy_jets[i])->Integral() << std::endl;
   
   TH1F* MR_dy_22 = new TH1F( *dy_jets[4] );
   std::cout << "dy Jets MR 2BOX: " << MR_dy_22->Integral() << std::endl;
@@ -95,13 +111,19 @@ void CreateStackPlots(){
   TH1F* RSQ_dy_00 = new TH1F( *dy_jets[1] );
   std::cout << "dy Jets RSQ 0BOX: " << RSQ_dy_00->Integral() << std::endl;
 
-  TH1F* dy_MR0 =new TH1F( dy->PlotMR_0Box() );
-  TH1F* dy_R20 =new TH1F( dy->PlotRSQ_0Box() );
-  TH1F* dy_MR1 =new TH1F( dy->PlotMR_1Box() );
-  TH1F* dy_R21 =new TH1F( dy->PlotRSQ_1Box() );
-  TH1F* dy_MR2 =new TH1F( dy->PlotMR_2Box() );
-  TH1F* dy_R22 =new TH1F( dy->PlotRSQ_2Box() );
-
+  TH1F* dy_MR0 =new TH1F( *dy_jets[6] );
+  TH1F* dy_R20 =new TH1F( *dy_jets[7] );
+  TH1F* dy_MR1 =new TH1F( *dy_jets[8] );
+  TH1F* dy_R21 =new TH1F( *dy_jets[9] );
+  TH1F* dy_MR2 =new TH1F( *dy_jets[10] );
+  TH1F* dy_R22 =new TH1F( *dy_jets[11] );
+  
+  std::cout << "dyJets MR 1BOX V2: " << dy_MR1->Integral() << std::endl; 
+  std::cout << "dyJets R2 1BOX V2: " << dy_R21->Integral() << std::endl; 
+  std::cout << "dyJets MR 0BOX V2: " << dy_MR0->Integral() << std::endl; 
+  std::cout << "dyJets R2 0BOX V2: " << dy_R20->Integral() << std::endl;
+  std::cout << "dyJets MR 2BOX V2: " << dy_MR2->Integral() << std::endl; 
+  std::cout << "dyJets R2 2BOX V2: " << dy_R22->Integral() << std::endl;
   //////////////////////////////////////////////////
   /////////////////////////////////////////////////
   /////////////////TTbar + Jets////////////////////
@@ -114,7 +136,7 @@ void CreateStackPlots(){
   TT->PrintEvents();
 
   std::vector<TH1F*> TTjets = TT->Plot_1DRazor();
-  for(int i = 0; i < 6; i++)std::cout << i << " " << (TTjets[i])->Integral() << std::endl;  
+  for(int i = 0; i < 12; i++)std::cout << i << " " << (TTjets[i])->Integral() << std::endl;  
   
   TH1F* MR_22_TT = new TH1F( *TTjets[4] );
   std::cout << "TTJets MR 2BOX: " << MR_22_TT->Integral() << std::endl;
@@ -135,51 +157,55 @@ void CreateStackPlots(){
   std::cout << "TTJets RSQ 0BOX: " << RSQ_00_TT->Integral() << std::endl;
 
   
-  TH1F* TT_MR0 =new TH1F( TT->PlotMR_0Box() );
-  std::cout << "blah 0" << std::endl;
-  TH1F* TT_R20 =new TH1F( TT->PlotRSQ_0Box() );
-  std::cout << "blah 1" << std::endl;
-  TH1F* TT_MR1 =new TH1F( TT->PlotMR_1Box() );
-  std::cout << "blah 2" << std::endl;
-  TH1F* TT_R21 =new TH1F( TT->PlotRSQ_1Box() );
-  TH1F* TT_MR2 =new TH1F( TT->PlotMR_2Box() );
-  TH1F* TT_R22 =new TH1F( TT->PlotRSQ_2Box() );
+  TH1F* TT_MR0 =new TH1F( *TTjets[6] );
+  TH1F* TT_R20 =new TH1F( *TTjets[7] );
+  TH1F* TT_MR1 =new TH1F( *TTjets[8] );
+  TH1F* TT_R21 =new TH1F( *TTjets[9] );
+  TH1F* TT_MR2 =new TH1F( *TTjets[10] );
+  TH1F* TT_R22 =new TH1F( *TTjets[11] );
+
+  std::cout << "TTJets MR 1BOX V2: " << TT_MR1->Integral() << std::endl; 
+  std::cout << "TTJets R2 1BOX V2: " << TT_R21->Integral() << std::endl; 
+  std::cout << "TTJets MR 0BOX V2: " << TT_MR0->Integral() << std::endl; 
+  std::cout << "TTJets R2 0BOX V2: " << TT_R20->Integral() << std::endl;
+  std::cout << "TTJets MR 2BOX V2: " << TT_MR2->Integral() << std::endl; 
+  std::cout << "TTJets R2 2BOX V2: " << TT_R22->Integral() << std::endl;
 
   ////////////////////////////////////////////////////////////////
   //////////////////// DATA//////////////////////////////////////
   ///////////////////////////////////////////////////////////////
   
-  //const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/53X/HTMHT_Run2012A_ILV/out/HTMHT_ILV_Run2012AB.root";
-  
-  const char* data_file = "/media/data/cmorgoth/Data/DMData/HTMHT_ILV_Run2012AB.root";
-  
-  //const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/afs/DoubleMu-Run2012AB/out/DoubleMu_ILV_AB.root";
+  //const char* data_file = "/media/data/cmorgoth/Data/DMData/HTMHT_ILV_Run2012AB.root";
+  const char* data_file = "/media/data/cmorgoth/Data/DMData/FullHTMHTRereco/HTMHT_ABCD_FullLumi20128TeV.root";
   
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);
   data->PrintEvents();
   
-  TH1F* MR_22_data = new TH1F( data->PlotMR_2Box() );
+  std::vector<TH1F*> data_histos = data->Plot_1DRazor();
+  for(int i = 0; i < 6; i++)std::cout << i << " " << (data_histos[i])->Integral() << std::endl;
+  
+  TH1F* MR_22_data = new TH1F( *data_histos[4] );
   std::cout << "Data MR 2BOX: " << MR_22_data->Integral() << std::endl;
   MR_22_data->Sumw2();
     
-  TH1F* MR_11_data = new TH1F( data->PlotMR_1Box() );
+  TH1F* MR_11_data = new TH1F( *data_histos[2] );
   std::cout << "Data MR 1BOX: " << MR_11_data->Integral() << std::endl;
   MR_11_data->Sumw2();
     
-  TH1F* MR_00_data = new TH1F( data->PlotMR_0Box() );
+  TH1F* MR_00_data = new TH1F( *data_histos[0] );
   std::cout << "Data MR 0BOX: " << MR_00_data->Integral() << std::endl;
   MR_00_data->Sumw2();
     
-  TH1F* RSQ_22_data = new TH1F( data->PlotRSQ_2Box() );
+  TH1F* RSQ_22_data = new TH1F( *data_histos[5] );
   std::cout << "Data RSQ 2BOX: " << RSQ_22_data->Integral() << std::endl;
   RSQ_22_data->Sumw2();
     
-  TH1F* RSQ_11_data = new TH1F( data->PlotRSQ_1Box() );
+  TH1F* RSQ_11_data = new TH1F( *data_histos[3] );
   std::cout << "Data RSQ 1BOX: " << RSQ_11_data->Integral() << std::endl;
   RSQ_11_data->Sumw2();
   
-  TH1F* RSQ_00_data = new TH1F( data->PlotRSQ_0Box() );
+  TH1F* RSQ_00_data = new TH1F( *data_histos[1] );
   std::cout << "Data RSQ 0BOX: " << RSQ_00_data->Integral() << std::endl;
   RSQ_00_data->Sumw2();
   
@@ -200,8 +226,8 @@ void CreateStackPlots(){
   double ERROR = 0.0;
   double Int_Gral = sum0BoxMR->IntegralAndError(1, 6, ERROR);
 
-  std::cout << "Integral: " << Int_Gral << " Error: " << ERROR << std::endl; 
-  std::cout << "errr: " << sqrt(sumerr) << std::endl;
+  std::cout << "Total MC Integral BOX0: " << Int_Gral << " Total MC Error BOX0: " << ERROR << std::endl; 
+  std::cout << "Total MC errr BOX0: " << sqrt(sumerr) << std::endl;
   std::cout << "tot: " << sum << std::endl;
 
   TH1F* sum0BoxR2 = new TH1F( *Wjets[1] );
@@ -219,8 +245,8 @@ void CreateStackPlots(){
   ERROR = 0.0;
   Int_Gral = sum0BoxR2->IntegralAndError(1, 6, ERROR);
 
-  std::cout << "Integral: " << Int_Gral << " Error: " << ERROR << std::endl;
-  std::cout << "errr: " << sqrt(sumerr) << std::endl;
+  std::cout << "Total MC Integral R2 BOX0: " << Int_Gral << " Total MC Error R2 BOX0: " << ERROR << std::endl;
+  std::cout << "Total MC errr R2 BOX0: " << sqrt(sumerr) << std::endl;
   std::cout << "tot: " << sum << std::endl;
 
   TH1F* sum1BoxMR = new TH1F( *Wjets[2] );
@@ -238,7 +264,7 @@ void CreateStackPlots(){
   ERROR = 0.0;
   Int_Gral = sum1BoxMR->IntegralAndError(1, 6, ERROR);
 
-  std::cout << "Integral: " << Int_Gral << " Error: " << ERROR << std::endl;
+  std::cout << "Total MC Integral MR BOX1: " << Int_Gral << " Total MC Error MR BOX1: " << ERROR << std::endl;
   std::cout << "errr: " << sqrt(sumerr) << std::endl;
   std::cout << "tot: " << sum << std::endl;
 
@@ -257,7 +283,7 @@ void CreateStackPlots(){
   ERROR = 0.0;
   Int_Gral = sum2BoxMR->IntegralAndError(1, 6, ERROR);
 
-  std::cout << "Integral: " << Int_Gral << " Error: " << ERROR << std::endl;
+  std::cout << "Total MC Integral MR BOX2: " << Int_Gral << " Total MC Error MR BOX2: " << ERROR << std::endl;
   std::cout << "errr: " << sqrt(sumerr) << std::endl;
   std::cout << "tot: " << sum << std::endl;
 
@@ -362,7 +388,7 @@ void CreateStackPlots(){
   aux2->Add( RSQ_00_TT, 1);
   aux2->Add( RSQ_0, 1);
   aux2->Add( RSQ_00, 1);
-  RatioPlotsV2(stack1, aux2, RSQ_00_data, "MC 0 #mu BOX", "Data 0 #mu BOX", "StackPlots/Data_MC_RSQ_0BOX", "RSQ", leg);
+  RatioPlotsV2(stack1, RSQ_00_data, aux2, "MC 0 #mu BOX", "Data 0 #mu BOX", "StackPlots/Data_MC_RSQ_0BOX", "RSQ", leg);
   delete leg;
   delete aux2;
   
@@ -433,7 +459,7 @@ void CreateStackPlots(){
   aux2->Add( MR_00_TT, 1);
   aux2->Add( MR_0, 1);
   aux2->Add( MR_00, 1);
-  RatioPlotsV2( stackMR_0Box, aux2, MR_00_data, "MC 0 #mu BOX", "Data 0 #mu BOX", "StackPlots/Data_MC_MR_0BOX", "MR", leg);
+  RatioPlotsV2( stackMR_0Box, MR_00_data, aux2, "MC 0 #mu BOX", "Data 0 #mu BOX", "StackPlots/Data_MC_MR_0BOX", "MR", leg);
   delete leg;
   delete aux2; 
   
@@ -496,7 +522,7 @@ void CreateStackPlots(){
   aux2->Add( RSQ_11_TT, 1);
   aux2->Add( RSQ_1, 1);
   aux2->Add( RSQ_11, 1);
-  RatioPlotsV2( stackRSQ_1Box, aux2, RSQ_11_data, "MC 1 #mu BOX", "Data 1 #mu BOX", "StackPlots/Data_MC_RSQ_1BOX", "RSQ", leg);
+  RatioPlotsV2( stackRSQ_1Box, RSQ_11_data, aux2, "MC 1 #mu BOX", "Data 1 #mu BOX", "StackPlots/Data_MC_RSQ_1BOX", "RSQ", leg);
   delete leg;
   delete aux2;
 
@@ -559,7 +585,7 @@ void CreateStackPlots(){
   aux2->Add( MR_11_TT, 1);
   aux2->Add( MR_1, 1);
   aux2->Add( MR_11, 1);
-  RatioPlotsV2( stackMR_1Box, aux2, MR_11_data, "MC 1 #mu BOX", "Data 1 #mu BOX", "StackPlots/Data_MC_MR_1BOX", "MR", leg);
+  RatioPlotsV2( stackMR_1Box, MR_11_data, aux2, "MC 1 #mu BOX", "Data 1 #mu BOX", "StackPlots/Data_MC_MR_1BOX", "MR", leg);
   delete leg;
   delete aux2;
 
@@ -624,7 +650,7 @@ void CreateStackPlots(){
   aux2->Add( RSQ_22_TT, 1);
   //aux2->Add( RSQ_2, 1);
   //aux2->Add( RSQ_22, 1);                                                                                                        
-  RatioPlotsV2( stackRSQ_2Box, aux2, RSQ_22_data, "MC 2 #mu BOX", "Data 2 #mu BOX", "StackPlots/Data_MC_RSQ_2BOX", "RSQ", leg);
+  RatioPlotsV2( stackRSQ_2Box, RSQ_22_data, aux2, "MC 2 #mu BOX", "Data 2 #mu BOX", "StackPlots/Data_MC_RSQ_2BOX", "RSQ", leg);
   delete leg;
   delete aux2;
 
@@ -688,7 +714,7 @@ void CreateStackPlots(){
   aux2->Add( MR_22_TT, 1);
   //aux2->Add( MR_22, 1);
   //aux2->Add( MR_2, 1);
-  RatioPlotsV2( stackMR_2Box, aux2, MR_22_data, "MC 2 #mu BOX", "Data 2 #mu BOX", "StackPlots/Data_MC_MR_2BOX", "MR", leg);
+  RatioPlotsV2( stackMR_2Box, MR_22_data, aux2, "MC 2 #mu BOX", "Data 2 #mu BOX", "StackPlots/Data_MC_MR_2BOX", "MR", leg);
   delete leg;
   delete aux2;
 

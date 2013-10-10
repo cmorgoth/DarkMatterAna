@@ -1,7 +1,7 @@
 #include "DM_2DRatio.hh"
 
 TH2F* RatioPlotsTwoD(TH2F* h1, TH2F* h2, TString fname = "fname", TString hname = "histo_name"){
-
+  
   TCanvas* C1 = new TCanvas("C1", "C1", 1024, 1024);
   C1->cd();
   
@@ -18,7 +18,7 @@ TH2F* RatioPlotsTwoD(TH2F* h1, TH2F* h2, TString fname = "fname", TString hname 
   
   float binV, binErr, Xpos, Ypos;
   TLatex* Lval;
-  //TLatex* Lerr;
+  TLatex* Lerr;
   char val[50];
   char err[50];
   binV = 666.;
@@ -38,16 +38,16 @@ TH2F* RatioPlotsTwoD(TH2F* h1, TH2F* h2, TString fname = "fname", TString hname 
       //std::cout << "val: " << val << err << "Ypos: " << Ypos << std::endl;
       if( (binV != 0) || ( binErr != 0) ){
 	Lval = new TLatex(Xpos-70,Ypos+0.01, "HELLO!!!" );
-	//Lerr = new TLatex(Xpos-70,Ypos-0.03, err );
+	Lerr = new TLatex(Xpos-70,Ypos-0.03, err );
 	Lval->SetTextSize(.015);
-	//Lval->Draw("same");
-	//Lval->AppendPad();
+	Lval->Draw("same");
+	Lval->AppendPad();
 	Lval->DrawLatex(Xpos -12. ,Ypos+0.01, val );
 	Lval->DrawLatex(Xpos -12. ,Ypos-0.013, err );
-	//Lerr->Draw("same");
+	Lerr->Draw("same");
 	
 	delete Lval;
-	//delete Lerr;
+	delete Lerr;
 	//std::cout << printf( "%.4f", binV ) << std::endl;
       }
      

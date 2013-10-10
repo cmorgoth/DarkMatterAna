@@ -9,8 +9,8 @@ void CreateRatioPlots(){
   TLegend* leg;
   
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 1;
+  bT = 1;
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////// W + Jets //////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ void CreateRatioPlots(){
   
   std::cout << "debug 0" << std::endl;
   TH1F* RSQ_W00 = new TH1F( *Wjets[1] );
-  
+  std::cout << "debug 0.5" << std::endl;
   RSQ_W00->Scale(1./RSQ_W00->Integral());
   std::cout << "debug 1" << std::endl;
   TH1F* RSQ_W11 = new TH1F( *Wjets[3] );
@@ -44,8 +44,8 @@ void CreateRatioPlots(){
   ////////
   ////////
   std::cout << "debug 4" << std::endl;
-  RatioPlots( MR_W00, MR_W11, "W + Jets (l#nu) 0 #mu BOX", "W + Jets (l#nu) 1 #mu BOX", "RatioPlots/WJetsMR_TauVeto", "MR");
-  RatioPlots( RSQ_W00, RSQ_W11, "W + Jets (l#nu) 0 #mu BOX", "W + Jets (l#nu) 1 #mu BOX", "RatioPlots/WJetsRSQ_TauVeto", "RSQ");
+  RatioPlots( MR_W00, MR_W11, "W + Jets (l#nu) 0 #mu BOX", "W + Jets (l#nu) 1 #mu BOX", "RatioPlots/WJetsMR_0_to_1mu", "MR");
+  RatioPlots( RSQ_W00, RSQ_W11, "W + Jets (l#nu) 0 #mu BOX", "W + Jets (l#nu) 1 #mu BOX", "RatioPlots/WJetsRSQ_0_to_1mu", "RSQ");
   
   std::cout << "debug 5" << std::endl;  
   ///////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ void CreateRatioPlots(){
   TH2F*  MR_RSQ_0BOX = new TH2F( W->PlotRSQ_vs_MR_0Box() );
   
   std::cout << "debug 7" << std::endl;
-  TH2F* wjRatio = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX, MR_R2_1BOX, "RatioPlots/Wjets2D", "Wjets2dRatio");
+  TH2F* wjRatio = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX, MR_R2_1BOX, "RatioPlots/Wjets2D_0_to_1mu", "Wjets2dRatio");
 
   std::cout << "debug 8" << std::endl;	
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,8 @@ void CreateRatioPlots(){
   
   std::cout << "========= debug 0 =======" << std::endl;
 
-  const char* data_file = "/media/data/cmorgoth/Data/DMData/HTMHT_ILV_Run2012AB.root";
+  //const char* data_file = "/media/data/cmorgoth/Data/DMData/HTMHT_ILV_Run2012AB.root";
+  const char* data_file = "/media/data/cmorgoth/Data/DMData/FullHTMHTRereco/HTMHT_ABCD_FullLumi20128TeV.root";
 
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);

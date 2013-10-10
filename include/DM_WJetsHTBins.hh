@@ -22,8 +22,8 @@ public:
   static const double sigma2 = 48.01*1000.;//fb (NNLO)
   static const double sigma3 = 38.3*1000.;//fb (LO PREP)
   static const double sigma4 = 25.22*1000.;//fb (LO PREP)
-  static const float Lumi = 5.;//fb^{-1}
-    
+  static const float Lumi = 19.6;//fb^{-1}
+  
   static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
   
   static const float RSQ_BinArr[RSQ_Bins+1];

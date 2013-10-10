@@ -28,12 +28,12 @@ public:
   static const int MR_Bins = 4;
   static const int RSQ_Bins = 4;
   
-  static const float Lumi = 5.;//fb^-1
-    
+  static const float Lumi = 19.6;//fb^-1
+  
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
   
-  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
+  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight (Loose, tight), 4(Med and Tight)
   
   BaseDM();
   BaseDM( const char*, TString , int);//constructor for Data
@@ -70,6 +70,7 @@ public:
   virtual std::vector<TH1F*> PlotHT();
   virtual std::vector<TH1F*> PlotMHTmag(){};
   virtual std::vector<TH1F*> PlotMHTphi(){};
+  virtual std::vector<TH1F*> Plot_1DRazor();
   
   virtual bool SetBrachStatus();
 

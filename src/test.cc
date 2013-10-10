@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "TCanvas.h"
 #include "TLatex.h"
 #include "TLegend.h"
@@ -34,7 +35,7 @@ const float TTJets::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
 const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.50};
 const float BaseDM::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
 */
-
+/*
 const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
 const float ZJetsNuNu::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
 
@@ -49,12 +50,31 @@ const float TTJets::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
 
 const float BaseDM::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
 const float BaseDM::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
+*/
+
+const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
+const float ZJetsNuNu::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+
+const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0,  2.50};
+const float WJetsHTBins::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+
+const float DY::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
+const float DY::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+
+const float TTJets::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
+const float TTJets::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+
+const float BaseDM::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
+const float BaseDM::MR_BinArr[] = {200., 400., 600., 800., 3500.};
 
 int main(){
   
   int bL, bM, bT;
   bL = bM = 0;
   bT = 0;
+
+  std::ofstream ofs("Yields.tex", std::ofstream::out);
+
   ///////////////////////////////
   ////////// tt + jets//////////
   //////////////////////////////
@@ -83,9 +103,11 @@ int main(){
   TH1F* RSQ_00_TT = new TH1F( *TTjets[1] );
   std::cout << "TTJets RSQ 0BOX: " << RSQ_00_TT->Integral() << std::endl;
   
-  TH2F* TT_2D_0mu = new TH2F(TT->PlotRSQ_vs_MR_0Box());
-  TH2F* TT_2D_1mu = new TH2F(TT->PlotRSQ_vs_MR_1Box());
-  TH2F* TT_2D_2mu = new TH2F(TT->PlotRSQ_vs_MR_2Box());
+  std::vector<TH2F*> TTjets2D = TT->Plot_2DRazor();
+  for(int i = 0; i < 3; i++)std::cout << i << " " << (TTjets2D[i])->Integral() << std::endl;
+  TH2F* TT_2D_0mu = new TH2F(*TTjets2D[0]);
+  TH2F* TT_2D_1mu = new TH2F(*TTjets2D[1]);
+  TH2F* TT_2D_2mu = new TH2F(*TTjets2D[2]);
   
   std::cout << "2d tt 0mu: " << TT_2D_0mu->Integral() << std::endl;
   std::cout << "2d tt 1mu: " << TT_2D_1mu->Integral() << std::endl;
@@ -118,9 +140,18 @@ int main(){
   ////////////Z(nunu)+Jets///////////
   //////////////////////////////////
   ZJetsNuNu* Z = new ZJetsNuNu( 2 );
-  TH2F*  MR_RSQ_0BOX_Z = new TH2F( Z->PlotRSQ_vs_MR_0Box() );
-  MR_RSQ_0BOX_Z->Sumw2();
+  Z->SetBtagCut(bL,bM,bT);
+  
+  std::vector<TH2F*> Zjets2D = Z->Plot_2DRazor();
+  for(int i = 0; i < 3; i++)std::cout << i << " " << (Zjets2D[i])->Integral() << std::endl;
+  
+  TH2F*  MR_RSQ_0BOX_Z = new TH2F( *Zjets2D[0] );
+  TH2F*  MR_RSQ_1BOX_Z = new TH2F( *Zjets2D[1] );
+  TH2F*  MR_RSQ_2BOX_Z = new TH2F( *Zjets2D[2] );
+  //MR_RSQ_0BOX_Z->Sumw2();
   std::cout << "Z(nunu) 0 box: " << MR_RSQ_0BOX_Z->Integral() << std::endl;
+  std::cout << "Z(nunu) 1 box: " << MR_RSQ_2BOX_Z->Integral() << std::endl;
+  std::cout << "Z(nunu) 2 box: " << MR_RSQ_1BOX_Z->Integral() << std::endl;
   
   std::vector<TH1F*> Zjets = Z->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (Zjets[i])->Integral() << std::endl;
@@ -170,9 +201,13 @@ int main(){
   TH1F* MR_2 = new TH1F( *Wjets[4] );
   std::cout << "WJets MR 2BOX: " << MR_2->Integral() << std::endl;
   
-  TH2F*  MR_R2_1BOX = new TH2F( W->PlotRSQ_vs_MR_1Box() );
-  TH2F*  MR_RSQ_0BOX = new TH2F( W->PlotRSQ_vs_MR_0Box() );
   
+  std::vector<TH2F*> Wjets2D = W->Plot_2DRazor();
+  for(int i = 0; i < 3; i++)std::cout << i << " " << (Wjets2D[i])->Integral() << std::endl;
+  
+  TH2F*  MR_RSQ_0BOX_W = new TH2F( *Wjets2D[0] );
+  TH2F*  MR_RSQ_1BOX_W = new TH2F( *Wjets2D[1] );
+  TH2F*  MR_RSQ_2BOX_W = new TH2F( *Wjets2D[2] );
 
   /////////////////////////
   //////////Drell-Yan//////
@@ -202,11 +237,14 @@ int main(){
   TH1F* RSQ_dy_00 = new TH1F( *dy_jets[1] );
   std::cout << "dy Jets RSQ 0BOX: " << RSQ_dy_00->Integral() << std::endl;
 
-  TH2F*  MR_RSQ_0BOX_DY = new TH2F( dy->PlotRSQ_vs_MR_0Box() );
+  std::vector<TH2F*> dy_jets2D = dy->Plot_2DRazor();
+  for(int i = 0; i < 3; i++)std::cout << i << " " << (dy_jets2D[i])->Integral() << std::endl;
+
+  TH2F*  MR_RSQ_0BOX_DY = new TH2F( *dy_jets2D[0] );
   MR_RSQ_0BOX_DY->Sumw2();
-  TH2F*  MR_RSQ_1BOX_DY = new TH2F( dy->PlotRSQ_vs_MR_1Box() );
+  TH2F*  MR_RSQ_1BOX_DY = new TH2F( *dy_jets2D[1] );
   MR_RSQ_1BOX_DY->Sumw2();
-  TH2F*  MR_RSQ_2BOX_DY = new TH2F( dy->PlotRSQ_vs_MR_2Box() );
+  TH2F*  MR_RSQ_2BOX_DY = new TH2F( *dy_jets2D[2] );
   MR_RSQ_2BOX_DY->Sumw2();
 
   std::cout << "DY0mu: " << MR_RSQ_0BOX_DY->Integral() << std::endl;
@@ -238,39 +276,44 @@ int main(){
   C1->SaveAs("eta2DY.png");
   
 
-  const char* data_file = "/afs/cern.ch/work/c/cpena/DarkMatter/CMSSW_5_2_3/src/VecbosApp/53X/HTMHT_Run2012A_ILV/out/HTMHT_ILV_Run2012AB.root";
+  const char* data_file = "/media/data/cmorgoth/Data/DMData/FullHTMHTRereco/HTMHT_ABCD_FullLumi20128TeV.root";
 
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);
   
+  std::vector<TH1F*> data_h = data->Plot_1DRazor();
+  for(int i = 0; i < 6; i++)std::cout << i << " " << (data_h[i])->Integral() << std::endl;
   
-  TH1F* MR_22_data = new TH1F( data->PlotMR_2Box() );
+  TH1F* MR_22_data = new TH1F( *data_h[4] );
   std::cout << "Data MR 2BOX: " << MR_22_data->Integral() << std::endl;
   MR_22_data->Sumw2();
   
-  TH1F* MR_11_data = new TH1F( data->PlotMR_1Box() );
+  TH1F* MR_11_data = new TH1F( *data_h[2] );
   std::cout << "Data MR 1BOX: " << MR_11_data->Integral() << std::endl;
   MR_11_data->Sumw2();
   
-  TH1F* MR_00_data = new TH1F( data->PlotMR_0Box() );
+  TH1F* MR_00_data = new TH1F( *data_h[0] );
   std::cout << "Data MR 0BOX: " << MR_00_data->Integral() << std::endl;
   MR_00_data->Sumw2();
 
-  TH1F* RSQ_22_data = new TH1F( data->PlotRSQ_2Box() );
+  TH1F* RSQ_22_data = new TH1F( *data_h[5] );
   std::cout << "Data RSQ 2BOX: " << RSQ_22_data->Integral() << std::endl;
   RSQ_22_data->Sumw2();
   
-  TH1F* RSQ_11_data = new TH1F( data->PlotRSQ_1Box() );
+  TH1F* RSQ_11_data = new TH1F( *data_h[3] );
   std::cout << "Data RSQ 1BOX: " << RSQ_11_data->Integral() << std::endl;
   RSQ_11_data->Sumw2();
   
-  TH1F* RSQ_00_data = new TH1F( data->PlotRSQ_0Box() );
+  TH1F* RSQ_00_data = new TH1F( *data_h[1] );
   std::cout << "Data RSQ 0BOX: " << RSQ_00_data->Integral() << std::endl;
   RSQ_00_data->Sumw2();
   
-  TH2F* data_2d_0mu = new TH2F(data->PlotRSQ_vs_MR_0Box());
-  TH2F* data_2d_1mu = new TH2F(data->PlotRSQ_vs_MR_1Box());
-  TH2F* data_2d_2mu = new TH2F(data->PlotRSQ_vs_MR_2Box());
+  std::vector<TH2F*> data_h2D = data->Plot_2DRazor();
+  for(int i = 0; i < 3; i++)std::cout << i << " " << (data_h2D[i])->Integral() << std::endl;
+  
+  TH2F* data_2d_0mu = new TH2F( *data_h2D[0] );
+  TH2F* data_2d_1mu = new TH2F( *data_h2D[1] );
+  TH2F* data_2d_2mu = new TH2F( *data_h2D[2] );
 
   std::cout << "data 0mu: " << data_2d_0mu->Integral() << std::endl;
   std::cout << "data 1mu: " << data_2d_1mu->Integral() << std::endl;
@@ -350,11 +393,53 @@ int main(){
     delete stack;
     std::cout << "debug 3: " << std::endl;
   }
-  
-  
-  
-  TFile* f1 = new TFile("Btag_1Tight_1Medium.root","RECREATE");
 
+  double tt_mu[3], dy_mu[3], w_mu[3], z_mu[3];
+  double tt_mu_E[3], dy_mu_E[3], w_mu_E[3], z_mu_E[3];
+  
+  tt_mu[0] = TT_2D_0mu->IntegralAndError(1,4, tt_mu_E[0]);
+  tt_mu[1] = TT_2D_1mu->IntegralAndError(1,4, tt_mu_E[1]);
+  tt_mu[2] = TT_2D_2mu->IntegralAndError(1,4, tt_mu_E[2]);
+
+  dy_mu[0] = MR_RSQ_0BOX_DY->IntegralAndError(1,4, dy_mu_E[0]);
+  dy_mu[1] = MR_RSQ_1BOX_DY->IntegralAndError(1,4, dy_mu_E[1]);
+  dy_mu[2] = MR_RSQ_2BOX_DY->IntegralAndError(1,4, dy_mu_E[2]);
+
+  w_mu[0] = MR_RSQ_0BOX_W->IntegralAndError(1,4, w_mu_E[0]);
+  w_mu[1] = MR_RSQ_1BOX_W->IntegralAndError(1,4, w_mu_E[1]);
+  w_mu[2] = MR_RSQ_2BOX_W->IntegralAndError(1,4, w_mu_E[2]);
+  
+  z_mu[0] = MR_RSQ_0BOX_Z->IntegralAndError(1,4, z_mu_E[0]);
+  z_mu[1] = MR_RSQ_1BOX_Z->IntegralAndError(1,4, z_mu_E[1]);
+  z_mu[2] = MR_RSQ_2BOX_Z->IntegralAndError(1,4, z_mu_E[2]);
+  
+  double tot_0mu = tt_mu[0]+dy_mu[0]+w_mu[0]+z_mu[0];
+  double tot_1mu = tt_mu[1]+dy_mu[1]+w_mu[1]+z_mu[1];
+  double tot_2mu = tt_mu[2]+dy_mu[2]+w_mu[2]+z_mu[2];
+
+  double tot_0mu_E = sqrt(tt_mu_E[0]*tt_mu_E[0] + dy_mu_E[0]*dy_mu_E[0] + w_mu_E[0]*w_mu_E[0] + z_mu_E[0]*z_mu_E[0]);
+  double tot_1mu_E = sqrt(tt_mu_E[1]*tt_mu_E[1] + dy_mu_E[1]*dy_mu_E[1] + w_mu_E[1]*w_mu_E[1] + z_mu_E[1]*z_mu_E[1]);
+  double tot_2mu_E = sqrt(tt_mu_E[2]*tt_mu_E[2] + dy_mu_E[2]*dy_mu_E[2] + w_mu_E[2]*w_mu_E[2] + z_mu_E[2]*z_mu_E[2]);
+  
+  ofs << "\\begin{table}[htdp]\n\\caption{default}\n\\begin{center}\n\\begin{tabular}{|c|c|c|c|}\n\\hline\n";
+  
+  ofs << "\t&\t$0-\\mu BOX$\t&\t$1-\\mu BOX$\t&\t$2-\\mu BOX$\\\\\n\\hline";
+  
+  ofs << "$t\\bar{t}$ + Jets\t&\t" << tt_mu[0] << "$\\pm$" << tt_mu_E[0] << "\t&\t" << tt_mu[1] << "$\\pm$" << tt_mu_E[1] << "\t&\t" << tt_mu[2] << "$\\pm$" << tt_mu_E[2] <<"\\\\\n";
+  
+  ofs << "\\hline\n$Z(ll)$ + Jets\t&\t" << dy_mu[0] << "$\\pm$" << dy_mu_E[0] << "\t&\t" << dy_mu[1] << "$\\pm$" << dy_mu_E[1] << "\t&\t" << dy_mu[2] << "$\\pm$" << dy_mu_E[2] <<"\\\\\n";
+  
+  ofs << "\\hline\n$Z(\\nu\\bar{\\nu})$ + Jets\t&\t" << z_mu[0] << "$\\pm$" << z_mu_E[0] << "\t&\t" << z_mu[1] << "$\\pm$" << z_mu_E[1] << "\t&\t" << z_mu[2] << "$\\pm$" << z_mu_E[2] << "\\\\\n";
+  
+  ofs << "\\hline\n$W(l\\nu)$ + Jets\t&\t" <<  w_mu[0] << "$\\pm$" << w_mu_E[0] << "\t&\t" << w_mu[1] << "$\\pm$" << w_mu_E[1] << "\t&\t" << w_mu[2] << "$\\pm$" << w_mu_E[2] <<"\\\\\n";
+  
+  ofs << "\\hline\n\\hline\nTotal MC\t&\t" << tot_0mu << "$\\pm$" << tot_0mu_E << "\t&\t" << tot_1mu << "$\\pm$" << tot_1mu_E << "\t&\t" << tot_2mu << "$\\pm$" << tot_2mu_E << "\\\\\n";
+  ofs << "\\hline\nData\t&\t" << data_2d_0mu->Integral() << "\t&\t" << data_2d_1mu->Integral() << "\t&\t" << data_2d_2mu->Integral() << "\\\\\n\\hline";
+  ofs << "\\end{tabular}\n\\end{center}\n\\label{default}\n\\end{table}\n";
+  ofs.close();
+
+  TFile* f1 = new TFile("VetoBtag_FullPromtReco_NNLoXsec.root","RECREATE");
+  
   RSQ_dy_00->Write("dy_R2_0mu");
   RSQ_dy_11->Write("dy_R2_1mu");
   RSQ_dy_22->Write("dy_R2_2mu");
@@ -394,8 +479,8 @@ int main(){
   MR_RSQ_0BOX_DY->Write("dy_2d_0mu");
   MR_RSQ_1BOX_DY->Write("dy_2d_1mu");
   MR_RSQ_2BOX_DY->Write("dy_2d_2mu");
-  MR_R2_1BOX->Write("W_2d_1mu");
-  MR_RSQ_0BOX->Write("W_2d_0mu");
+  MR_RSQ_1BOX_W->Write("W_2d_1mu");
+  MR_RSQ_0BOX_W->Write("W_2d_0mu");
   
   RSQ_22_data->Write("data_R2_2mu");
   RSQ_11_data->Write("data_R2_1mu");

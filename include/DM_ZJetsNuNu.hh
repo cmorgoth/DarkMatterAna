@@ -22,8 +22,8 @@ public:
   static const double sigma1 = 160.3*1000.;//(LO PREP)
   static const double sigma2 = 41.49*1000.;//fb (LO PREP)
   static const double sigma3 = 5.274*1000.;//fb (LO PREP)
-  static const float Lumi = 5.;//fb^{-1}
-    
+  static const float Lumi = 19.6;//fb^{-1}
+  
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
   
