@@ -25,8 +25,9 @@ DY::DY(int metIndex){
   ////////////////HT bins Trees/////////
   //////////////////////////////////////  
   
-  F = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJetsHT200To400_ILV.root");
-  //F = TFile::Open("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/53X/DYJetsHT200To400/out/DYJetsHT200To400_ILV.root");
+  //F = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJetsHT200To400_ILV.root");
+  //F = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJets/DYJetsHT200To400_PU_MU_TOT.root");
+  F = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJets/BtagCorrMC/DYJetsHT200To400_PU_MU_LooseBtag.root");
 
   TTree* effT = (TTree*)F->Get("effTree");
   T = (TTree*)F->Get("outTree");
@@ -40,9 +41,11 @@ DY::DY(int metIndex){
   weight0 = Lumi*sigma0/Ntot;
   Nexp += weight0*T->GetEntries(); 
   
-  F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJetsHT400_ILV.root");
-  //F1 = TFile::Open("/afs/cern.ch/work/c/cpena/scratch_DM/CMSSW_5_2_3/src/VecbosApp/53X/DYJetsHT400/out/DYJetsHT400_ILV.root");
+  //F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJetsHT400_ILV.root");
+  //F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJets/DYJetsHT400_PU_MU_TOT.root");
+  F1 = TFile::Open("/media/data/cmorgoth/Data/DMData/DYJets/BtagCorrMC/DYJetsHT400_PU_MU_LooseBtag.root");
   
+
   effT = (TTree*)F1->Get("effTree");
   effT->SetBranchAddress("Npassed_In", &N_In);
   T1 = (TTree*)F1->Get("outTree");
@@ -762,7 +765,8 @@ TH2F DY::PlotRSQ_vs_MR_2Box(){
 
 std::vector<TH1F*> DY::PlotMETmag(){
   double metX[4], metcorrX[4], metY[4], metcorrY[4], ht, RSQ[4], MR[4], run/*, ls, evNum*/;
-  double mht[3], CSV[30];
+  double mht[3], CSV[30], pu_w, mu_w;
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2;
   int BOX, nBtag[2], N_Jets;
 
   std::vector< TH1F* > metvec;
@@ -781,10 +785,13 @@ std::vector<TH1F*> DY::PlotMETmag(){
   MET[11] = new TH1F( "NJETS2_Z", "NJETS 2 BOX", 9, 1, 10);
   
   SetMetStatus();
+  T->SetBranchAddress("pu_w", &pu_w);
+  T->SetBranchAddress("mu_w", &mu_w);
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -795,7 +802,13 @@ std::vector<TH1F*> DY::PlotMETmag(){
   T->SetBranchAddress("metY", metY);
   T->SetBranchAddress("metCorrY", metcorrY);
   T->SetBranchAddress("N_Jets", &N_Jets);
-  
+  T->SetBranchAddress("pTHem1", &pTHem1);
+  T->SetBranchAddress("pTHem2", &pTHem2);
+  T->SetBranchAddress("etaHem1", &etaHem1);
+  T->SetBranchAddress("etaHem2", &etaHem2);
+  T->SetBranchAddress("phiHem1", &phiHem1);
+  T->SetBranchAddress("phiHem2", &phiHem2);
+
   float metmag = 0.;
   float metmagcorr = 0.;
   for(int i = 0; i < T->GetEntries(); i++){
@@ -804,32 +817,39 @@ std::vector<TH1F*> DY::PlotMETmag(){
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
+
+    TLorentzVector j1;
+    TLorentzVector j2;
+    j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere                                        
+    double Dphi = j1.DeltaPhi(j2);
 
     metmag = sqrt(metX[metIndex]*metX[metIndex]+metY[metIndex]*metY[metIndex]);
     metmagcorr = sqrt(metcorrX[metIndex]*metcorrX[metIndex]+metcorrY[metIndex]*metcorrY[metIndex]);
-    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] ){
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        MET[0]->Fill(metmag, weight0*hltWeight);
-        MET[1]->Fill(metmagcorr, weight0*hltWeight);
-        MET[2]->Fill(metmagcorr-metmag, weight0*hltWeight);
-        MET[9]->Fill(N_Jets,weight0*hltWeight);
+        MET[0]->Fill(metmag, weight0*hltWeight*pu_w*mu_w);
+        MET[1]->Fill(metmagcorr, weight0*hltWeight*pu_w*mu_w);
+        MET[2]->Fill(metmagcorr-metmag, weight0*hltWeight*pu_w*mu_w);
+        MET[9]->Fill(N_Jets,weight0*hltWeight*pu_w*mu_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        MET[3]->Fill(metmag, weight0*hltWeight);
-        MET[4]->Fill(metmagcorr, weight0*hltWeight);
-        MET[5]->Fill(metmagcorr-metmag, weight0*hltWeight);
-        MET[10]->Fill(N_Jets,weight0*hltWeight);
+        MET[3]->Fill(metmag, weight0*hltWeight*pu_w*mu_w);
+        MET[4]->Fill(metmagcorr, weight0*hltWeight*pu_w*mu_w);
+        MET[5]->Fill(metmagcorr-metmag, weight0*hltWeight*pu_w*mu_w);
+        MET[10]->Fill(N_Jets,weight0*hltWeight*pu_w*mu_w);
       }else if( BOX == 2 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        MET[6]->Fill(metmag, weight0*hltWeight);
-        MET[7]->Fill(metmagcorr, weight0*hltWeight);
-        MET[8]->Fill(metmagcorr-metmag, weight0*hltWeight);
-        MET[11]->Fill(N_Jets,weight0*hltWeight);
+        MET[6]->Fill(metmag, weight0*hltWeight*pu_w*mu_w);
+        MET[7]->Fill(metmagcorr, weight0*hltWeight*pu_w*mu_w);
+        MET[8]->Fill(metmagcorr-metmag, weight0*hltWeight*pu_w*mu_w);
+        MET[11]->Fill(N_Jets,weight0*hltWeight*pu_w*mu_w);
       }
     }
     
@@ -837,10 +857,13 @@ std::vector<TH1F*> DY::PlotMETmag(){
   T->SetBranchStatus("*", 0);
 
   SetMetStatus1();
+  T1->SetBranchAddress("pu_w", &pu_w);
+  T1->SetBranchAddress("mu_w", &mu_w);
   T1->SetBranchAddress("RSQ", RSQ);
   T1->SetBranchAddress("MR", MR);
   T1->SetBranchAddress("BOX_NUM", &BOX);
-  T1->SetBranchAddress("nBtag", &nBtag[0]);
+  //T1->SetBranchAddress("nBtag", &nBtag[0]);
+  T1->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T1->SetBranchAddress("nBtagTight", &nBtag[1]);
   T1->SetBranchAddress("N_Jets", &N_Jets);
   T1->SetBranchAddress("CSV", CSV);
@@ -851,6 +874,12 @@ std::vector<TH1F*> DY::PlotMETmag(){
   T1->SetBranchAddress("metY", metY);
   T1->SetBranchAddress("metCorrY", metcorrY);
   T1->SetBranchAddress("N_Jets", &N_Jets);
+  T1->SetBranchAddress("pTHem1", &pTHem1);
+  T1->SetBranchAddress("pTHem2", &pTHem2);
+  T1->SetBranchAddress("etaHem1", &etaHem1);
+  T1->SetBranchAddress("etaHem2", &etaHem2);
+  T1->SetBranchAddress("phiHem1", &phiHem1);
+  T1->SetBranchAddress("phiHem2", &phiHem2);
   
   for(int i = 0; i < T1->GetEntries(); i++){
     T1->GetEntry(i);
@@ -858,32 +887,40 @@ std::vector<TH1F*> DY::PlotMETmag(){
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
 
+    TLorentzVector j1;
+    TLorentzVector j2;
+    j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere                                        
+    double Dphi = j1.DeltaPhi(j2);
+    
+    
     metmag = sqrt(metX[metIndex]*metX[metIndex]+metY[metIndex]*metY[metIndex]);
     metmagcorr = sqrt(metcorrX[metIndex]*metcorrX[metIndex]+metcorrY[metIndex]*metcorrY[metIndex]);
-    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] ){
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5 ){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        MET[0]->Fill(metmag, weight1*hltWeight);
-        MET[1]->Fill(metmagcorr, weight1*hltWeight);
-        MET[2]->Fill(metmagcorr-metmag, weight1*hltWeight);
-        MET[9]->Fill(N_Jets,weight1*hltWeight);
+        MET[0]->Fill(metmag, weight1*hltWeight*pu_w*mu_w);
+        MET[1]->Fill(metmagcorr, weight1*hltWeight*pu_w*mu_w);
+        MET[2]->Fill(metmagcorr-metmag, weight1*hltWeight*pu_w*mu_w);
+        MET[9]->Fill(N_Jets,weight1*hltWeight*pu_w*mu_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        MET[3]->Fill(metmag, weight1*hltWeight);
-        MET[4]->Fill(metmagcorr, weight1*hltWeight);
-        MET[5]->Fill(metmagcorr-metmag, weight1*hltWeight);
-        MET[10]->Fill(N_Jets,weight1*hltWeight);
+        MET[3]->Fill(metmag, weight1*hltWeight*pu_w*mu_w);
+        MET[4]->Fill(metmagcorr, weight1*hltWeight*pu_w*mu_w);
+        MET[5]->Fill(metmagcorr-metmag, weight1*hltWeight*pu_w*mu_w);
+        MET[10]->Fill(N_Jets,weight1*hltWeight*pu_w*mu_w);
       }else if( BOX == 2 ){
 	hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        MET[6]->Fill(metmag, weight1*hltWeight);
-        MET[7]->Fill(metmagcorr, weight1*hltWeight);
-        MET[8]->Fill(metmagcorr-metmag, weight1*hltWeight);
-        MET[11]->Fill(N_Jets,weight1*hltWeight);
+        MET[6]->Fill(metmag, weight1*hltWeight*pu_w*mu_w);
+        MET[7]->Fill(metmagcorr, weight1*hltWeight*pu_w*mu_w);
+        MET[8]->Fill(metmagcorr-metmag, weight1*hltWeight*pu_w*mu_w);
+        MET[11]->Fill(N_Jets,weight1*hltWeight*pu_w*mu_w);
       }
     }
     
@@ -911,7 +948,8 @@ int DY::pfJetPassCSVM(double* CSVM, int N_Jets){
 
 std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   double metX[4], metcorrX[4], metY[4], metcorrY[4], ht, RSQ[4], MR[4]/*, run, ls, evNum*/;
-  double mht[3], CSV[30], Mu_E[2], Mu_Px[2], Mu_Py[2], Mu_Pz[2];
+  double mht[3], CSV[30], Mu_E[2], Mu_Px[2], Mu_Py[2], Mu_Pz[2], pu_w, mu_w;
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2;
   int BOX, N_Jets, nBtag[2];
   double hltWeight;
   
@@ -926,6 +964,8 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   plot_2mu[5] = new TH1F( "Eta2", "Eta2", 15, -3.0, 3.0);
 
   SetMetStatus();
+  T->SetBranchAddress("pu_w", &pu_w);
+  T->SetBranchAddress("mu_w", &mu_w);
   T->SetBranchStatus("Mu_E",1);
   T->SetBranchStatus("Mu_Px",1);
   T->SetBranchStatus("Mu_Py",1);
@@ -937,7 +977,8 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+ 
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -946,17 +987,31 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   T->SetBranchAddress("metX", metX);
   T->SetBranchAddress("metCorrX", metcorrX);
   T->SetBranchAddress("metY", metY);
-
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  T->SetBranchAddress("pTHem1", &pTHem1);
+  T->SetBranchAddress("pTHem2", &pTHem2);
+  T->SetBranchAddress("etaHem1", &etaHem1);
+  T->SetBranchAddress("etaHem2", &etaHem2);
+  T->SetBranchAddress("phiHem1", &phiHem1);
+  T->SetBranchAddress("phiHem2", &phiHem2);
+  
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
     fBtag[0] = (nBtag[0] == 0);
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
 
+    TLorentzVector j1;
+    TLorentzVector j2;
+    j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere                                        
+    double Dphi = j1.DeltaPhi(j2);
+    
     double MET = sqrt(metX[2]*metX[2]+metY[2]*metY[2]);
-    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] ){
+    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5 ){
       TLorentzVector mu1(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
       TLorentzVector mu2(Mu_Px[1], Mu_Py[1], Mu_Pz[1], Mu_E[1]);
       TLorentzVector sum_mu;
@@ -970,12 +1025,12 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
       hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
       if( hltWeight == 0.0 )hltWeight = 1.0;
       if( Mass > 0. && Mass < 1800.){
-        plot_2mu[0]->Fill(Mass,weight0*hltWeight);
-        plot_2mu[1]->Fill(angle,weight0*hltWeight);
-        plot_2mu[2]->Fill(pt1,weight0*hltWeight);
-        plot_2mu[3]->Fill(pt2,weight0*hltWeight);
-        plot_2mu[4]->Fill(eta1,weight0*hltWeight);
-        plot_2mu[5]->Fill(eta2,weight0*hltWeight);
+        plot_2mu[0]->Fill(Mass,weight0*hltWeight*pu_w*mu_w);
+        plot_2mu[1]->Fill(angle,weight0*hltWeight*pu_w*mu_w);
+        plot_2mu[2]->Fill(pt1,weight0*hltWeight*pu_w*mu_w);
+        plot_2mu[3]->Fill(pt2,weight0*hltWeight*pu_w*mu_w);
+        plot_2mu[4]->Fill(eta1,weight0*hltWeight*pu_w*mu_w);
+        plot_2mu[5]->Fill(eta2,weight0*hltWeight*pu_w*mu_w);
       }
       
     }
@@ -983,6 +1038,8 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   }
 
   SetMetStatus1();
+  T1->SetBranchAddress("pu_w", &pu_w);
+  T1->SetBranchAddress("mu_w", &mu_w);
   T1->SetBranchStatus("Mu_E",1);
   T1->SetBranchStatus("Mu_Px",1);
   T1->SetBranchStatus("Mu_Py",1);
@@ -994,7 +1051,8 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   T1->SetBranchAddress("RSQ", RSQ);
   T1->SetBranchAddress("MR", MR);
   T1->SetBranchAddress("BOX_NUM", &BOX);
-  T1->SetBranchAddress("nBtag", &nBtag[0]);
+  //T1->SetBranchAddress("nBtag", &nBtag[0]);
+  
   T1->SetBranchAddress("nBtagTight", &nBtag[1]);
   T1->SetBranchAddress("N_Jets", &N_Jets);
   T1->SetBranchAddress("CSV", CSV);
@@ -1003,17 +1061,31 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
   T1->SetBranchAddress("metX", metX);
   T1->SetBranchAddress("metCorrX", metcorrX);
   T1->SetBranchAddress("metY", metY);
-  
+  T1->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  T1->SetBranchAddress("pTHem1", &pTHem1);
+  T1->SetBranchAddress("pTHem2", &pTHem2);
+  T1->SetBranchAddress("etaHem1", &etaHem1);
+  T1->SetBranchAddress("etaHem2", &etaHem2);
+  T1->SetBranchAddress("phiHem1", &phiHem1);
+  T1->SetBranchAddress("phiHem2", &phiHem2);
+
   for(int i = 0; i < T1->GetEntries(); i++){
     T1->GetEntry(i);
     fBtag[0] = (nBtag[0] == 0);
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
+
+    TLorentzVector j1;
+    TLorentzVector j2;
+    j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere                                        
+    double Dphi = j1.DeltaPhi(j2);
 
     double MET = sqrt(metX[2]*metX[2]+metY[2]*metY[2]);
-    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] ){
+    if( BOX == 2 && RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5 ){
       TLorentzVector mu1(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
       TLorentzVector mu2(Mu_Px[1], Mu_Py[1], Mu_Pz[1], Mu_E[1]);
       TLorentzVector sum_mu;
@@ -1027,12 +1099,12 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
       hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
       if( hltWeight == 0.0 )hltWeight = 1.0;
       if(Mass > .0 && Mass < 1800.){
-        plot_2mu[0]->Fill(Mass,weight1*hltWeight);
-        plot_2mu[1]->Fill(angle,weight1*hltWeight);
-        plot_2mu[2]->Fill(pt1,weight1*hltWeight);
-        plot_2mu[3]->Fill(pt2,weight1*hltWeight);
-        plot_2mu[4]->Fill(eta1,weight1*hltWeight);
-        plot_2mu[5]->Fill(eta2,weight1*hltWeight);
+        plot_2mu[0]->Fill(Mass,weight1*hltWeight*pu_w*mu_w);
+        plot_2mu[1]->Fill(angle,weight1*hltWeight*pu_w*mu_w);
+        plot_2mu[2]->Fill(pt1,weight1*hltWeight*pu_w*mu_w);
+        plot_2mu[3]->Fill(pt2,weight1*hltWeight*pu_w*mu_w);
+        plot_2mu[4]->Fill(eta1,weight1*hltWeight*pu_w*mu_w);
+        plot_2mu[5]->Fill(eta2,weight1*hltWeight*pu_w*mu_w);
       }
       
     }
@@ -1049,7 +1121,7 @@ std::vector<TH1F*> DY::DoubleMuBoxPlots(){
 
 std::vector<TH2F*> DY::Plot_2DRazor(){
   double RSQ[4], MR[4], CSV[30];
-  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2;
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w;
   int BOX, N_Jets, nBtag[2];
   
   std::vector< TH2F* > Razor2DVec;
@@ -1064,10 +1136,13 @@ std::vector<TH2F*> DY::Plot_2DRazor(){
   }
 
   SetStatus();
+  T->SetBranchAddress("pu_w", &pu_w);
+  T->SetBranchAddress("mu_w", &mu_w);
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -1081,7 +1156,6 @@ std::vector<TH2F*> DY::Plot_2DRazor(){
     T->GetEntry(i);
     TLorentzVector j1;
     TLorentzVector j2;
-    
     j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
     double Dphi = j1.DeltaPhi(j2);
@@ -1090,31 +1164,37 @@ std::vector<TH2F*> DY::Plot_2DRazor(){
     fBtag[1] = fBtag[2] = (nBtag[0] >= nBtagCut[0]);
     fBtag[3] = (nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1]);
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1]);
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
 
-    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && Dphi < 2.5){
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor2D[0]->Fill(MR[metIndex], RSQ[metIndex], weight0*hltWeight);
+        Razor2D[0]->Fill(MR[metIndex], RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-	Razor2D[1]->Fill(MR[metIndex], RSQ[metIndex], weight0*hltWeight);
+	Razor2D[1]->Fill(MR[metIndex], RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
       }else if( BOX == 2 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor2D[2]->Fill(MR[metIndex], RSQ[metIndex], weight0*hltWeight);
+        Razor2D[2]->Fill(MR[metIndex], RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
       }
     }
   }
   T->SetBranchStatus("*", 0);
 
+  std::cout << "DEBUG" << std::endl;
+  
   SetStatus1();
+  T1->SetBranchAddress("pu_w", &pu_w);
+  T1->SetBranchAddress("mu_w", &mu_w);
   T1->SetBranchAddress("RSQ", RSQ);
   T1->SetBranchAddress("MR", MR);
   T1->SetBranchAddress("BOX_NUM", &BOX);
-  T1->SetBranchAddress("nBtag", &nBtag[0]);
+  //T1->SetBranchAddress("nBtag", &nBtag[0]);
+  T1->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T1->SetBranchAddress("nBtagTight", &nBtag[1]);
   T1->SetBranchAddress("N_Jets", &N_Jets);
   T1->SetBranchAddress("CSV", CSV);
@@ -1129,7 +1209,6 @@ std::vector<TH2F*> DY::Plot_2DRazor(){
     
     TLorentzVector j1;
     TLorentzVector j2;
-    
     j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
     double Dphi = j1.DeltaPhi(j2);
@@ -1138,21 +1217,22 @@ std::vector<TH2F*> DY::Plot_2DRazor(){
     fBtag[1] = fBtag[2] = (nBtag[0] >= nBtagCut[0]);
     fBtag[3] = (nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1]);
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1]);
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
 
-    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && Dphi < 2.5 ){
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5 ){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor2D[0]->Fill(MR[metIndex], RSQ[metIndex], weight1*hltWeight);
+        Razor2D[0]->Fill(MR[metIndex], RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-	Razor2D[1]->Fill(MR[metIndex], RSQ[metIndex], weight1*hltWeight);
+	Razor2D[1]->Fill(MR[metIndex], RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
       }else if( BOX == 2 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor2D[2]->Fill(MR[metIndex], RSQ[metIndex], weight1*hltWeight);
+        Razor2D[2]->Fill(MR[metIndex], RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
       }
     }
   }
@@ -1167,7 +1247,7 @@ std::vector<TH2F*> DY::Plot_2DRazor(){
 };
 
 std::vector<TH1F*> DY::Plot_1DRazor(){
-  double RSQ[4], MR[4], CSV[30], run, evNum, ls;
+  double RSQ[4], MR[4], CSV[30], run, evNum, ls, pu_w, mu_w;
   double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2;
   int BOX, N_Jets, nBtag[2];
 
@@ -1187,13 +1267,14 @@ std::vector<TH1F*> DY::Plot_1DRazor(){
   }
   
   SetStatus();
-  //T->SetBranchAddress("run", &run);
-  //T->SetBranchAddress("evNum", &evNum);
-  //T->SetBranchAddress("ls", &ls);
+  
+  T->SetBranchAddress("pu_w", &pu_w);
+  T->SetBranchAddress("mu_w", &mu_w);
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -1218,40 +1299,44 @@ std::vector<TH1F*> DY::Plot_1DRazor(){
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
     
-    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && Dphi < 2.5){
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[0]->Fill(MR[metIndex], weight0*hltWeight);
-        Razor1D[1]->Fill(RSQ[metIndex], weight0*hltWeight);
-	Razor1D[6]->Fill(MR[metIndex], weight0*hltWeight);
-        Razor1D[7]->Fill(RSQ[metIndex], weight0*hltWeight);
+        Razor1D[0]->Fill(MR[metIndex], weight0*hltWeight*pu_w*mu_w);
+        Razor1D[1]->Fill(RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
+	Razor1D[6]->Fill(MR[metIndex], weight0*hltWeight*pu_w*mu_w);
+        Razor1D[7]->Fill(RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[2]->Fill(MR[metIndex],  weight0*hltWeight);
-        Razor1D[3]->Fill(RSQ[metIndex], weight0*hltWeight);
-	Razor1D[8]->Fill(MR[metIndex], weight0*hltWeight);
-        Razor1D[9]->Fill(RSQ[metIndex], weight0*hltWeight);
+        Razor1D[2]->Fill(MR[metIndex],  weight0*hltWeight*pu_w*mu_w);
+        Razor1D[3]->Fill(RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
+	Razor1D[8]->Fill(MR[metIndex], weight0*hltWeight*pu_w*mu_w);
+        Razor1D[9]->Fill(RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
       }else if( BOX == 2 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[4]->Fill(MR[metIndex], weight0*hltWeight);
-        Razor1D[5]->Fill(RSQ[metIndex], weight0*hltWeight);
-	Razor1D[10]->Fill(MR[metIndex], weight0*hltWeight);
-        Razor1D[11]->Fill(RSQ[metIndex], weight0*hltWeight);
+        Razor1D[4]->Fill(MR[metIndex], weight0*hltWeight*pu_w*mu_w);
+        Razor1D[5]->Fill(RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
+	Razor1D[10]->Fill(MR[metIndex], weight0*hltWeight*pu_w*mu_w);
+        Razor1D[11]->Fill(RSQ[metIndex], weight0*hltWeight*pu_w*mu_w);
       }
     }
   }
   T->SetBranchStatus("*", 0);
   
   SetStatus1();
+  T1->SetBranchAddress("pu_w", &pu_w);
+  T1->SetBranchAddress("mu_w", &mu_w);
   T1->SetBranchAddress("RSQ", RSQ);
   T1->SetBranchAddress("MR", MR);
   T1->SetBranchAddress("BOX_NUM", &BOX);
-  T1->SetBranchAddress("nBtag", &nBtag[0]);
+  //T1->SetBranchAddress("nBtag", &nBtag[0]);
+  T1->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T1->SetBranchAddress("nBtagTight", &nBtag[1]);
   T1->SetBranchAddress("N_Jets", &N_Jets);
   T1->SetBranchAddress("CSV", CSV);
@@ -1266,39 +1351,39 @@ std::vector<TH1F*> DY::Plot_1DRazor(){
     
     TLorentzVector j1;
     TLorentzVector j2;
-    
     j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere     
-    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere                                                                                                                           
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
     double Dphi = j1.DeltaPhi(j2);
     
     fBtag[0] = (nBtag[0] == 0);
     fBtag[1] = fBtag[2] = (nBtag[0] >= 1);
     fBtag[3] = ( nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
     int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
-    fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1] );
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
     
-    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && Dphi < 2.5 ){
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5 ){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[0]->Fill(MR[metIndex], weight1*hltWeight);
-        Razor1D[1]->Fill(RSQ[metIndex], weight1*hltWeight);
-	Razor1D[6]->Fill(MR[metIndex], weight1*hltWeight);
-        Razor1D[7]->Fill(RSQ[metIndex], weight1*hltWeight);
+        Razor1D[0]->Fill(MR[metIndex], weight1*hltWeight*pu_w*mu_w);
+        Razor1D[1]->Fill(RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
+	Razor1D[6]->Fill(MR[metIndex], weight1*hltWeight*pu_w*mu_w);
+        Razor1D[7]->Fill(RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[2]->Fill(MR[metIndex], weight1*hltWeight);
-        Razor1D[3]->Fill(RSQ[metIndex], weight1*hltWeight);
-	Razor1D[8]->Fill(MR[metIndex], weight1*hltWeight);
-        Razor1D[9]->Fill(RSQ[metIndex], weight1*hltWeight);
+        Razor1D[2]->Fill(MR[metIndex], weight1*hltWeight*pu_w*mu_w);
+        Razor1D[3]->Fill(RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
+	Razor1D[8]->Fill(MR[metIndex], weight1*hltWeight*pu_w*mu_w);
+        Razor1D[9]->Fill(RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
       }else if( BOX == 2 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
 	if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[4]->Fill(MR[metIndex], weight1*hltWeight);
-        Razor1D[5]->Fill(RSQ[metIndex], weight1*hltWeight);
-	Razor1D[10]->Fill(MR[metIndex], weight1*hltWeight);
-        Razor1D[11]->Fill(RSQ[metIndex], weight1*hltWeight);
+        Razor1D[4]->Fill(MR[metIndex], weight1*hltWeight*pu_w*mu_w);
+        Razor1D[5]->Fill(RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
+	Razor1D[10]->Fill(MR[metIndex], weight1*hltWeight*pu_w*mu_w);
+        Razor1D[11]->Fill(RSQ[metIndex], weight1*hltWeight*pu_w*mu_w);
       }
     }
   }
@@ -1315,6 +1400,8 @@ std::vector<TH1F*> DY::Plot_1DRazor(){
 bool DY::SetStatus(){
 
   T->SetBranchStatus("*",0); //disable all branches
+  T->SetBranchStatus("pu_w",1);
+  T->SetBranchStatus("mu_w",1);
   T->SetBranchStatus("RSQ",1);
   T->SetBranchStatus("run",1);
   T->SetBranchStatus("evNum",1);
@@ -1331,10 +1418,15 @@ bool DY::SetStatus(){
   T->SetBranchStatus("etaHem2", 1);
   T->SetBranchStatus("phiHem1", 1);
   T->SetBranchStatus("phiHem2", 1);
+  T->SetBranchStatus("nBtagLCorr", 1);
+  T->SetBranchStatus("nBtagLCorrUp", 1);
+  T->SetBranchStatus("nBtagLCorrDown", 1);
 };
 
 bool DY::SetMetStatus(){
   T->SetBranchStatus("*",0); //disable all branches                                                                       
+  T->SetBranchStatus("pu_w",1);
+  T->SetBranchStatus("mu_w",1);
   T->SetBranchStatus("RSQ",1);
   T->SetBranchStatus("MR",1);
   T->SetBranchStatus("BOX_NUM",1);
@@ -1348,9 +1440,20 @@ bool DY::SetMetStatus(){
   T->SetBranchStatus("metCorrX",1);
   T->SetBranchStatus("metCorrY",1);
   T->SetBranchStatus("N_Jets",1);
+  T->SetBranchStatus("pTHem1", 1);
+  T->SetBranchStatus("pTHem2", 1);
+  T->SetBranchStatus("etaHem1", 1);
+  T->SetBranchStatus("etaHem2", 1);
+  T->SetBranchStatus("phiHem1", 1);
+  T->SetBranchStatus("phiHem2", 1);
+  T->SetBranchStatus("nBtagLCorr", 1);
+  T->SetBranchStatus("nBtagLCorrUp", 1);
+  T->SetBranchStatus("nBtagLCorrDown", 1);
 };
 bool DY::SetStatus1(){
   T1->SetBranchStatus("*",0); //disable all branches
+  T1->SetBranchStatus("pu_w",1);
+  T1->SetBranchStatus("mu_w",1);
   T1->SetBranchStatus("RSQ",1);
   T1->SetBranchStatus("run",1);
   T1->SetBranchStatus("evNum",1);
@@ -1367,9 +1470,14 @@ bool DY::SetStatus1(){
   T1->SetBranchStatus("etaHem2", 1);
   T1->SetBranchStatus("phiHem1", 1);
   T1->SetBranchStatus("phiHem2", 1);
+  T1->SetBranchStatus("nBtagLCorr", 1);
+  T1->SetBranchStatus("nBtagLCorrUp", 1);
+  T1->SetBranchStatus("nBtagLCorrDown", 1);
 };
 bool DY::SetMetStatus1(){
   T1->SetBranchStatus("*",0); //disable all branches                                                                      
+  T1->SetBranchStatus("pu_w",1);
+  T1->SetBranchStatus("mu_w",1);
   T1->SetBranchStatus("RSQ",1);
   T1->SetBranchStatus("MR",1);
   T1->SetBranchStatus("BOX_NUM",1);
@@ -1383,6 +1491,15 @@ bool DY::SetMetStatus1(){
   T1->SetBranchStatus("metCorrX",1);
   T1->SetBranchStatus("metCorrY",1);
   T1->SetBranchStatus("N_Jets",1);
+  T1->SetBranchStatus("pTHem1", 1);
+  T1->SetBranchStatus("pTHem2", 1);
+  T1->SetBranchStatus("etaHem1", 1);
+  T1->SetBranchStatus("etaHem2", 1);
+  T1->SetBranchStatus("phiHem1", 1);
+  T1->SetBranchStatus("phiHem2", 1);
+  T1->SetBranchStatus("nBtagLCorr", 1);
+  T1->SetBranchStatus("nBtagLCorrUp", 1);
+  T1->SetBranchStatus("nBtagLCorrDown", 1);
 };
 
 double DY::HLTscale(double MR, double R2){

@@ -9,8 +9,8 @@ void CreateMetPlots(){
   C0->cd();
 
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 2;
+  bT = 2;
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
   //////////////////////////////////////////// W + Jets //////////////////////////////////////////////////////////////   
@@ -165,13 +165,13 @@ void CreateMetPlots(){
   MET_Data[1]->Draw("same");
 
   std::cout << "deb 0" << std::endl;
-  RatioPlotsV2( stack1, aux2, MET_Data[1], "MET MC 0 #mu BOX", "MET Data 0 #mu BOX", "METplots/Data_MC_MET_01BOX","MET", lege);
+  RatioPlotsV2( stack1, MET_Data[1], aux2, "MET MC 0 #mu BOX", "MET Data 0 #mu BOX", "METplots/Data_MC_MET_01BOX","MET", lege);
     
-  std::cout << "deb 1" << std::endl;
-  lege->Draw();
-  C0->SetLogy();
-  C0->SaveAs("METplots/Met1Stack0Mu.pdf");
-  C0->SaveAs("METplots/Met1Stack0Mu.png");
+  //std::cout << "deb 1" << std::endl;
+  //lege->Draw();
+  //C0->SetLogy();
+  //C0->SaveAs("METplots/Met1Stack0Mu.pdf");
+  //C0->SaveAs("METplots/Met1Stack0Mu.png");
 
   delete lege;
   delete aux2;
@@ -214,10 +214,10 @@ void CreateMetPlots(){
   MET_Data[0]->SetStats(0);
   MET_Data[0]->Draw("same");
   
-  RatioPlotsV2( stack2, aux2, MET_Data[0], "MET MC 0 #mu BOX", "MET Data 0 #mu BOX", "METplots/Data_MC_MET_00BOX","MET", lege);
+  RatioPlotsV2( stack2, MET_Data[0], aux2, "MET MC 0 #mu BOX", "MET Data 0 #mu BOX", "METplots/Data_MC_MET_00BOX","MET", lege);
 
-  C0->SaveAs("METplots/Met0Stack0Mu.pdf");
-  C0->SaveAs("METplots/Met0Stack0Mu.png");
+  //C0->SaveAs("METplots/Met0Stack0Mu.pdf");
+  //C0->SaveAs("METplots/Met0Stack0Mu.png");
 
   delete aux2;
   delete lege;
@@ -259,10 +259,10 @@ void CreateMetPlots(){
   MET_Data[3]->SetMarkerSize(1.5);
   MET_Data[3]->Draw("same");
 
-  RatioPlotsV2( stack3, aux2, MET_Data[3], "MET MC 1 #mu BOX", "MET Data 1 #mu BOX", "METplots/Data_MC_MET_10BOX","MET", lege);
+  RatioPlotsV2( stack3, MET_Data[3], aux2, "MET MC 1 #mu BOX", "MET Data 1 #mu BOX", "METplots/Data_MC_MET_10BOX","MET", lege);
 
-  C0->SaveAs("METplots/Met0Stack1Mu.pdf");
-  C0->SaveAs("METplots/Met0Stack1Mu.png");
+  //->SaveAs("METplots/Met0Stack1Mu.pdf");
+  //->SaveAs("METplots/Met0Stack1Mu.png");
   
   delete aux2;
   delete lege;
@@ -304,10 +304,10 @@ void CreateMetPlots(){
   MET_Data[4]->SetMarkerSize(1.5);
   MET_Data[4]->Draw("same");
 
-  RatioPlotsV2( stack4, aux2, MET_Data[4], "MET MC 1 #mu BOX", "MET Data 1 #mu BOX", "METplots/Data_MC_MET_11BOX","MET", lege);
+  RatioPlotsV2( stack4, MET_Data[4], aux2, "MET MC 1 #mu BOX", "MET Data 1 #mu BOX", "METplots/Data_MC_MET_11BOX","MET", lege);
 
-  C0->SaveAs("METplots/Met1Stack1Mu.pdf");
-  C0->SaveAs("METplots/Met1Stack1Mu.png");
+  //C0->SaveAs("METplots/Met1Stack1Mu.pdf");
+  //C0->SaveAs("METplots/Met1Stack1Mu.png");
 
   THStack* stack6 = new THStack("stack6", "");
 
@@ -346,10 +346,10 @@ void CreateMetPlots(){
   MET_Data[6]->SetMarkerSize(1.5);
   MET_Data[6]->Draw("same");
 
-  RatioPlotsV2( stack6, aux2, MET_Data[6], "MET MC 2 #mu BOX", "MET Data 2 #mu BOX", "METplots/Data_MC_MET_20BOX","MET", lege);
+  RatioPlotsV2( stack6,  MET_Data[6], aux2, "MET MC 2 #mu BOX", "MET Data 2 #mu BOX", "METplots/Data_MC_MET_20BOX","MET", lege);
 
-  C0->SaveAs("METplots/Met0Stack2Mu.pdf");
-  C0->SaveAs("METplots/Met0Stack2Mu.png");
+  //C0->SaveAs("METplots/Met0Stack2Mu.pdf");
+  //C0->SaveAs("METplots/Met0Stack2Mu.png");
 
   delete aux2;
   delete lege;
@@ -391,10 +391,10 @@ void CreateMetPlots(){
   MET_Data[7]->SetMarkerSize(1.5);
   MET_Data[7]->Draw("same");
 
-  RatioPlotsV2( stack7, aux2, MET_Data[7], "MET MC 2 #mu BOX", "MET Data 2 #mu BOX", "METplots/Data_MC_MET_21BOX","MET", lege);
+  RatioPlotsV2( stack7, MET_Data[7], aux2, "MET MC 2 #mu BOX", "MET Data 2 #mu BOX", "METplots/Data_MC_MET_21BOX","MET", lege);
 
-  C0->SaveAs("METplots/Met1Stack2Mu.pdf");
-  C0->SaveAs("METplots/Met1Stack2Mu.png");
+  //C0->SaveAs("METplots/Met1Stack2Mu.pdf");
+  //C0->SaveAs("METplots/Met1Stack2Mu.png");
   
   delete aux2;
   delete lege;
@@ -436,7 +436,7 @@ void CreateMetPlots(){
   MET_Data[9]->SetMarkerSize(1.5);
   MET_Data[9]->Draw("same");
   
-  RatioPlotsV2( stack9, aux2, MET_Data[9], "NJETS MC 0 #mu BOX", "NJETS Data 0 #mu BOX", "METplots/Data_MC_NJETS_0BOX","NJETS", lege);
+  RatioPlotsV2( stack9,  MET_Data[9], aux2, "NJETS MC 0 #mu BOX", "NJETS Data 0 #mu BOX", "METplots/Data_MC_NJETS_0BOX","NJETS", lege);
 
   delete aux2;
   delete lege;
@@ -478,7 +478,7 @@ void CreateMetPlots(){
   MET_Data[10]->SetMarkerSize(1.5);
   MET_Data[10]->Draw("same");
 
-  RatioPlotsV2( stack10, aux2, MET_Data[10], "NJETS MC 1 #mu BOX", "NJETS Data 1 #mu BOX", "METplots/Data_MC_NJETS_1BOX","NJETS", lege);
+  RatioPlotsV2( stack10, MET_Data[10], aux2, "NJETS MC 1 #mu BOX", "NJETS Data 1 #mu BOX", "METplots/Data_MC_NJETS_1BOX","NJETS", lege);
 
   delete aux2;
   delete lege;
@@ -521,7 +521,7 @@ void CreateMetPlots(){
   MET_Data[11]->SetMarkerSize(1.5);
   MET_Data[11]->Draw("same");
 
-  RatioPlotsV2( stack11, aux2, MET_Data[11], "NJETS MC  2 #mu BOX", "NJETS Data 2 #mu BOX", "METplots/Data_MC_NJETS_2BOX","NJETS", lege);
+  RatioPlotsV2( stack11, MET_Data[11], aux2, "NJETS MC  2 #mu BOX", "NJETS Data 2 #mu BOX", "METplots/Data_MC_NJETS_2BOX","NJETS", lege);
 
   delete aux2;
   delete lege;

@@ -14,17 +14,30 @@ class WJetsHTBins{
   
 public:
   
-  static const int MR_Bins = 4;
-  static const int RSQ_Bins = 4;
+  //static const int MR_Bins = 4;
+  static const int MR_Bins = 5;
+  //static const int RSQ_Bins = 4;
+  static const int RSQ_Bins = 5;
   
-  static const double sigma0 = 235.6*1000.;//fb (NNLO)
-  static const double sigma1 = 90.27*1000.;//fb (NNLO)
-  static const double sigma2 = 48.01*1000.;//fb (NNLO)
+  
+  static const double sigma0 = 235.6*1000.;//fb (LO PREP)
+  static const double sigma1 = 90.27*1000.;//fb (LO PREP)
+  static const double sigma2 = 48.01*1000.;//fb (LO PREP)
   static const double sigma3 = 38.3*1000.;//fb (LO PREP)
   static const double sigma4 = 25.22*1000.;//fb (LO PREP)
-  static const float Lumi = 19.6;//fb^{-1}
   
-  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
+  /*
+  static const double sigma0 = 1.233*235.6*1000.;//fb (NNLO)
+  static const double sigma1 = 1.233*90.27*1000.;//fb (NNLO)
+  static const double sigma2 = 1.233*48.01*1000.;//fb (NNLO)
+  static const double sigma3 = 1.233*38.3*1000.;//fb (NNLO)
+  static const double sigma4 = 1.233*25.22*1000.;//fb (NNLO)
+  */
+  
+  //static const float Lumi = 19.6;//fb^{-1}
+  static const float Lumi = 19.364;
+  
+  static const int btagIndex = 4;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
   
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];

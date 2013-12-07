@@ -17,24 +17,8 @@
 
 using namespace std;
 
-//const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 1.3, 2.50};
-//const float ZJetsNuNu::MR_BinArr[] = {200., 400., 600., 800., 1000., 3500.};
-
-/*const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};                                           
-const float ZJetsNuNu::MR_BinArr[] = {200., 466., 732., 1000., 3500.}; 
-
-const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1,  2.50};
-const float WJetsHTBins::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float DY::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float DY::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float TTJets::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float TTJets::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float BaseDM::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float BaseDM::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-*/
+//Oct29-2013 and before
+/*
 const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
 const float ZJetsNuNu::MR_BinArr[] = {200., 400., 600., 800., 3500.};
 
@@ -49,13 +33,32 @@ const float TTJets::MR_BinArr[] = {200., 400., 600., 800., 3500.};
 
 const float BaseDM::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
 const float BaseDM::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+*/
+
+const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float ZJetsNuNu::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
+
+const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0,  2.50};
+const float WJetsHTBins::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
+
+const float DY::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float DY::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
+
+const float TTJets::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float TTJets::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
+
+const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
+
+
+
 
 int main(){
   
   CreateStackPlots();
-  //CreateRatioPlots();
+  CreateRatioPlots();
   //Create2DPlots();
-  //CreateMetPlots();
+  CreateMetPlots();
   
   return 0;
   

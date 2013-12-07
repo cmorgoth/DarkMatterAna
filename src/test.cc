@@ -19,62 +19,48 @@
 #include "DM_1DRatio.hh"
 
 using namespace std;
-/*
-const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.50};
-const float ZJetsNuNu::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
+/*5x5 v1
+const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float ZJetsNuNu::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
 
-const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.50};
-const float WJetsHTBins::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
+const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0,  2.50};
+const float WJetsHTBins::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
 
-const float DY::RSQ_BinArr[] = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.50};
-const float DY::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
+const float DY::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float DY::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
 
-const float TTJets::RSQ_BinArr[] = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.50};
-const float TTJets::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
+const float TTJets::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float TTJets::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
 
-const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.50};
-const float BaseDM::MR_BinArr[] = {200., 300., 400., 500., 600., 900., 3500.};
-*/
-/*
-const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float ZJetsNuNu::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1,  2.50};
-const float WJetsHTBins::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float DY::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float DY::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float TTJets::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float TTJets::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
-
-const float BaseDM::RSQ_BinArr[] = {0.5, 0.7, 0.9, 1.1, 2.50};
-const float BaseDM::MR_BinArr[] = {200., 466., 732., 1000., 3500.};
+const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.0, 2.50};
+const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 800., 3500.};
 */
 
-const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
-const float ZJetsNuNu::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+//5x5 v2
+const float ZJetsNuNu::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1, 2.50};
+const float ZJetsNuNu::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.};
 
-const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0,  2.50};
-const float WJetsHTBins::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+const float WJetsHTBins::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1,  2.50};
+const float WJetsHTBins::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.};
 
-const float DY::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
-const float DY::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+const float DY::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1, 2.50};
+const float DY::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.};
 
-const float TTJets::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
-const float TTJets::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+const float TTJets::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1, 2.50};                         
+const float TTJets::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.};
 
-const float BaseDM::RSQ_BinArr[] = {0.5, 0.65, 0.8, 1.0, 2.50};
-const float BaseDM::MR_BinArr[] = {200., 400., 600., 800., 3500.};
+const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1, 2.50};                       
+const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.}; 
+
 
 int main(){
   
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 1;
+  bT = 1;
 
-  std::ofstream ofs("Yields.tex", std::ofstream::out);
-
+  std::ofstream ofs("Yields_LO_TwoBtag_NewBinning_New.tex", std::ofstream::out);
+  
   ///////////////////////////////
   ////////// tt + jets//////////
   //////////////////////////////
@@ -117,6 +103,7 @@ int main(){
 
   TCanvas* C1 = new TCanvas("C1", "C1", 1024, 1024);
   C1->cd();
+  /*
   TTplots[0]->Draw();
   C1->SaveAs("MassTT.pdf");
   C1->SaveAs("MassTT.png");
@@ -135,6 +122,7 @@ int main(){
   TTplots[5]->Draw();
   C1->SaveAs("eta2TT.pdf");
   C1->SaveAs("eta2TT.png");
+  */
   
   ///////////////////////////////////
   ////////////Z(nunu)+Jets///////////
@@ -185,19 +173,14 @@ int main(){
   
   TH1F* RSQ_0 = new TH1F( *Wjets[1] );
   std::cout << "WJets R2 0BOX: " << RSQ_0->Integral() << std::endl;
-  
   TH1F* RSQ_1 = new TH1F( *Wjets[3] );
-  std::cout << "WJets R2 1BOX: " << RSQ_1->Integral() << std::endl;
-  
+  std::cout << "WJets R2 1BOX: " << RSQ_1->Integral() << std::endl; 
   TH1F* RSQ_2 = new TH1F( *Wjets[5] );
   std::cout << "WJets R2 2BOX: " << RSQ_2->Integral() << std::endl;
-  
   TH1F* MR_0 = new TH1F( *Wjets[0] );
   std::cout << "WJets MR 0BOX: " << MR_0->Integral() << std::endl;
-
   TH1F* MR_1 = new TH1F( *Wjets[2] );
   std::cout << "WJets MR 1BOX: " << MR_1->Integral() << std::endl;
-  
   TH1F* MR_2 = new TH1F( *Wjets[4] );
   std::cout << "WJets MR 2BOX: " << MR_2->Integral() << std::endl;
   
@@ -251,11 +234,61 @@ int main(){
   std::cout << "DY1mu: " << MR_RSQ_1BOX_DY->Integral() << std::endl;
   std::cout << "DY2mu: " << MR_RSQ_2BOX_DY->Integral() << std::endl;
   
+  //Creating Total Bkg Histograms
+  TH1F* R2_bkg_0mu = new TH1F( *RSQ_0 );//Wjets
+  R2_bkg_0mu->Add(RSQ_00_TT);//TTJets
+  R2_bkg_0mu->Add(RSQ_00_Z);//Z(nunu)Jets
+  R2_bkg_0mu->Add(RSQ_dy_00);//Z(ll)Jets
+  
+  TH1F* R2_bkg_1mu = new TH1F( *RSQ_1 );//Wjets                                                                    
+  R2_bkg_1mu->Add(RSQ_11_TT);//TTJets                                                                              
+  R2_bkg_1mu->Add(RSQ_11_Z);//Z(nunu)Jets                                                                          
+  R2_bkg_1mu->Add(RSQ_dy_11);//Z(ll)Jets
+  
+  TH1F* R2_bkg_2mu = new TH1F( *RSQ_2 );//Wjets                                                                    
+  R2_bkg_2mu->Add(RSQ_22_TT);//TTJets                                                                              
+  R2_bkg_2mu->Add(RSQ_22_Z);//Z(nunu)Jets                                                                          
+  R2_bkg_2mu->Add(RSQ_dy_22);//Z(ll)Jets
 
+  //MR Total
+  TH1F* MR_bkg_0mu = new TH1F( *MR_0 );//Wjets
+  MR_bkg_0mu->Add(MR_00_TT);//TTJets
+  MR_bkg_0mu->Add(MR_00_Z);//Z(nunu)Jets
+  MR_bkg_0mu->Add(MR_dy_00);//Z(ll)Jets 
+  
+  TH1F* MR_bkg_1mu = new TH1F( *MR_1 );//Wjets                                                                     
+  MR_bkg_1mu->Add(MR_11_TT);//TTJets                                                                               
+  MR_bkg_1mu->Add(MR_11_Z);//Z(nunu)Jets                                                                           
+  MR_bkg_1mu->Add(MR_dy_11);//Z(ll)Jets
+
+  TH1F* MR_bkg_2mu = new TH1F( *MR_2 );//Wjets
+  MR_bkg_2mu->Add(MR_22_TT);//TTJets                                                                     
+  MR_bkg_2mu->Add(MR_22_Z);//Z(nunu)Jets                                                                           
+  MR_bkg_2mu->Add(MR_dy_22);//Z(ll)Jets
+  
+  //2D Plots
+
+  TH2F* bkg_2d_0mu = new TH2F( *MR_RSQ_0BOX_DY );
+  bkg_2d_0mu->Add(MR_RSQ_0BOX_W);
+  bkg_2d_0mu->Add(MR_RSQ_0BOX_Z);
+  bkg_2d_0mu->Add(TT_2D_0mu);
+
+  TH2F* bkg_2d_1mu = new TH2F( *MR_RSQ_1BOX_DY );
+  bkg_2d_1mu->Add(MR_RSQ_1BOX_W);
+  bkg_2d_1mu->Add(MR_RSQ_1BOX_Z);
+  bkg_2d_1mu->Add(TT_2D_1mu);
+  
+  TH2F* bkg_2d_2mu = new TH2F( *MR_RSQ_2BOX_DY );
+  bkg_2d_2mu->Add(MR_RSQ_2BOX_W);
+  bkg_2d_2mu->Add(MR_RSQ_2BOX_Z);
+  bkg_2d_2mu->Add(TT_2D_2mu);
+  
+  
   std::vector<TH1F*> dyplots = dy->DoubleMuBoxPlots();
 
   //TCanvas* C1 = new TCanvas("C1", "C1", 1024, 1024);
   //C1->cd();
+  /*
   dyplots[0]->Draw();
   C1->SaveAs("MassDY.pdf");
   C1->SaveAs("MassDY.png");
@@ -274,7 +307,7 @@ int main(){
   dyplots[5]->Draw();
   C1->SaveAs("eta2DY.pdf");
   C1->SaveAs("eta2DY.png");
-  
+  */
 
   const char* data_file = "/media/data/cmorgoth/Data/DMData/FullHTMHTRereco/HTMHT_ABCD_FullLumi20128TeV.root";
 
@@ -344,6 +377,7 @@ int main(){
   TLegend* leg;
   TString name;
   TH1F* aux2;
+  
   for(int i = 0; i < 6; i++){
     TTplots[i]->SetFillColor(kPink+9);
     TTplots[i]->SetStats(0);
@@ -393,7 +427,7 @@ int main(){
     delete stack;
     std::cout << "debug 3: " << std::endl;
   }
-
+  
   double tt_mu[3], dy_mu[3], w_mu[3], z_mu[3];
   double tt_mu_E[3], dy_mu_E[3], w_mu_E[3], z_mu_E[3];
   
@@ -438,8 +472,22 @@ int main(){
   ofs << "\\end{tabular}\n\\end{center}\n\\label{default}\n\\end{table}\n";
   ofs.close();
 
-  TFile* f1 = new TFile("VetoBtag_FullPromtReco_NNLoXsec.root","RECREATE");
+  TFile* f1 = new TFile("TwoBtag_LOXsec_NewBinning_New.root","RECREATE");
+
+  //Total Bkg
+  R2_bkg_0mu->Write("R2_bkg_0mu");
+  R2_bkg_1mu->Write("R2_bkg_1mu");
+  R2_bkg_2mu->Write("R2_bkg_2mu");
   
+  MR_bkg_0mu->Write("MR_bkg_0mu");
+  MR_bkg_1mu->Write("MR_bkg_1mu");
+  MR_bkg_2mu->Write("MR_bkg_2mu");
+  
+  bkg_2d_0mu->Write("bkg_2d_0mu");
+  bkg_2d_1mu->Write("bkg_2d_1mu");
+  bkg_2d_2mu->Write("bkg_2d_2mu");
+  
+  //Individual Histos
   RSQ_dy_00->Write("dy_R2_0mu");
   RSQ_dy_11->Write("dy_R2_1mu");
   RSQ_dy_22->Write("dy_R2_2mu");

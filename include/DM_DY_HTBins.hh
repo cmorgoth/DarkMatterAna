@@ -15,12 +15,22 @@ class DY{
 public:
 
   
-  static const int MR_Bins = 4;
-  static const int RSQ_Bins = 4;
+  //static const int MR_Bins = 4;
+  static const int MR_Bins = 5;
+  //static const int RSQ_Bins = 4;
+  static const int RSQ_Bins = 5;
+
   
   static const double sigma0 = 19.73*1000.;// (LO PREP)
   static const double sigma1 = 2.826*1000.;//(LO PREP)
-  static const float Lumi = 19.6;//fb^{-1}
+  
+  /*
+  static const double sigma0 = 1.188*19.73*1000.;// (NNLO)
+  static const double sigma1 = 1.188*2.826*1000.;//(NNLO)
+  */
+  
+  //static const float Lumi = 19.6;//fb^{-1}
+  static const float Lumi = 19.364;
   
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];

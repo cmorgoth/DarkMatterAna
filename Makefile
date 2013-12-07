@@ -19,10 +19,12 @@ CPPFLAGS += -g
 
 TARGET = DM_ANA_Err
 
-SRC = src/test.cc src/DM_StackPlots.cc src/DM_RatioPlots.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc src/DM_DY_HTBins.cc src/DM_TT_LSLH.cc src/DM_Data.cc src/DM_ZJetsNuNu.cc src/DM_WJetsHTBins.cc src/DM_2D_MR_RSQ_Dist.cc src/DM_T2CC.cc src/DM_METPlots.cc
+#SRC = src/testV2.cc src/DM_BaseV2.cc src/DM_DataV2.cc 
+SRC = src/testV3.cc src/DM_BaseV2.cc src/DM_WJetsHTBinsV3.cc src/DM_ZJetsNuNuV3.cc src/DM_DY_HTBinsV3.cc src/DM_TT_LSLHV3.cc
 
-#TARGET = bkg_pre_1mu
-#SRC = bkg_pre_1mu.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc
+#SRC = src/testV3.cc src/DM_StackPlots.cc src/DM_RatioPlots.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc src/DM_DY_HTBins.cc src/DM_TT_LSLH.cc src/DM_Data.cc src/DM_ZJetsNuNu.cc src/DM_WJetsHTBinsV3.cc src/DM_2D_MR_RSQ_Dist.cc src/DM_METPlots.cc src/DM_BaseV2.cc
+
+#SRC = src/error_study.cc src/DM_StackPlots.cc src/DM_RatioPlots.cc src/DM_1DRatio.cc src/DM_2DRatio.cc src/DM_Base.cc src/DM_DY_HTBins.cc src/DM_TT_LSLH.cc src/DM_Data.cc src/DM_ZJetsNuNu.cc src/DM_WJetsHTBins.cc src/DM_2D_MR_RSQ_Dist.cc src/DM_T2CC.cc src/DM_METPlots.cc
 
 OBJ = $(SRC:.cc=.o)
 

@@ -2,10 +2,11 @@
 #include "DM_1DRatio.hh"
 
 void CreateStackPlots(){
- 
+  
   int bL, bM, bT;
   bL = bM = 2;
   bT = 2;
+
   WJetsHTBins* W = new WJetsHTBins( 2 );
   ///////////////////////////////////////////
   ///////////////WJETS 1D HISTOS/////////////
